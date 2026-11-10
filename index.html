@@ -1,0 +1,1440 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="全身肌群地圖：認識肌肉、排課表、一週菜單、寬肩與手臂計畫、飲食教練，以及 63 個附示範圖與 YouTube 影片的動作。">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>全身肌群地圖</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: anatomy-atlas plate (front + back figures on a gridded plate) beside a magnified "loupe" panel */
+:root{
+  --bg:#E9EDF0; --surface:#F7F9FA; --plate:#F1F4F6; --ink:#15202B; --muted:#596673; --line:#C9D1D8;
+  --skin:#D6DDE3; --muscle:#D7A7A2; --muscle-hi:#C4857F; --fiber:rgba(90,30,38,.30); --grid:rgba(21,32,43,.055);
+  --primary:#C12C3B; --secondary:#E09A2E; --chip:#E3E8EC;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1317; --surface:#161B20; --plate:#13181C; --ink:#E5EAEE; --muted:#94A0AB; --line:#29313A;
+  --skin:#262D34; --muscle:#5B3E44; --muscle-hi:#7C535B; --fiber:rgba(255,215,220,.20); --grid:rgba(229,234,238,.05);
+  --primary:#FF5363; --secondary:#F2B24B; --chip:#20272E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1317; --surface:#161B20; --plate:#13181C; --ink:#E5EAEE; --muted:#94A0AB; --line:#29313A;
+  --skin:#262D34; --muscle:#5B3E44; --muscle-hi:#7C535B; --fiber:rgba(255,215,220,.20); --grid:rgba(229,234,238,.05);
+  --primary:#FF5363; --secondary:#F2B24B; --chip:#20272E; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 20px}
+.eyebrow{font-family:var(--f-display);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--primary)}
+h1{margin:0;font-size:clamp(28px,6vw,40px);line-height:1.1;font-weight:700;text-wrap:balance}
+.lede{margin:4px 0 0;color:var(--muted);max-width:52ch}
+.legend{display:flex;gap:14px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.sw.p{background:var(--primary)} .sw.s{background:var(--secondary)} .sw.n{background:var(--muscle)}
+
+.main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}}
+
+/* Plate */
+.plate{background:var(--plate);border:1px solid var(--line);border-radius:14px;padding:14px;position:relative;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.tabs{display:flex;gap:4px;background:var(--chip);border-radius:10px;padding:4px;width:max-content;max-width:100%}
+.tabs button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:500;padding:6px 14px;border-radius:7px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.fig{display:flex;flex-direction:column;align-items:center;min-width:0}
+.fig svg{width:100%;max-width:300px;height:auto;display:block;touch-action:manipulation}
+.figlabel{font-family:var(--f-display);font-weight:600;letter-spacing:.16em;font-size:13px;color:var(--muted);text-transform:uppercase}
+.figlabel b{font-family:var(--f-body);letter-spacing:0;font-weight:500;color:var(--ink);margin-left:6px}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin:6px 0 0}
+
+/* SVG figure styling */
+.sil path,.sil ellipse{fill:var(--skin)}
+.m{fill:var(--muscle);stroke:var(--plate);stroke-width:.7;cursor:pointer;transition:fill .15s,opacity .15s}
+.m:hover{fill:var(--muscle-hi)}
+.has-sel .m{opacity:.62}
+.m.is-p{fill:var(--primary);opacity:1}
+.m.is-s{fill:var(--secondary);opacity:1}
+.fib path{fill:none;stroke:var(--fiber);stroke-width:.6;stroke-linecap:round;pointer-events:none}
+.lbl{font-family:var(--f-body);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-linejoin:round;pointer-events:none;text-anchor:middle;dominant-baseline:middle}
+.lbl.on{font-weight:700;fill:var(--primary)}
+
+/* Chips */
+.chips{margin-top:12px;display:grid;gap:10px}
+.cgroup{display:grid;gap:6px}
+.cgroup h3{margin:0;font-size:12px;font-weight:600;color:var(--muted);font-family:var(--f-display);letter-spacing:.12em;text-transform:uppercase}
+.crow{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;padding:4px 11px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+.dot.p{background:var(--primary)} .dot.s{background:var(--secondary)}
+button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+/* Detail panel */
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:14px;position:sticky;top:max(12px,env(safe-area-inset-top,0px));scroll-margin-top:12px}
+@media (max-width:860px){.detail{position:static}}
+.loupe{position:relative;border-radius:10px;background:var(--plate);border:1px solid var(--line);overflow:hidden;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:16px 16px}
+.loupe svg{display:block;width:100%;height:auto;aspect-ratio:5/4}
+.mag{position:absolute;top:8px;left:10px;font-family:var(--f-mono);font-size:11px;color:var(--muted);background:var(--surface);padding:2px 7px;border-radius:5px;border:1px solid var(--line)}
+.viewtag{position:absolute;top:8px;right:10px;font-family:var(--f-display);letter-spacing:.14em;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase}
+.corner{position:absolute;width:14px;height:14px;border-color:var(--muted);border-style:solid;opacity:.5}
+.c1{left:6px;bottom:6px;border-width:0 0 1.5px 1.5px}.c2{right:6px;bottom:6px;border-width:0 1.5px 1.5px 0}
+
+.dhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dhead h2{margin:2px 0 0;font-size:26px;line-height:1.2;text-wrap:balance}
+.en{font-family:var(--f-display);font-size:17px;color:var(--muted);letter-spacing:.03em}
+.stepper{display:flex;gap:6px;flex-shrink:0}
+.stepper button{width:38px;height:38px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:18px;cursor:pointer}
+.stepper button:hover{border-color:var(--muted)}
+.count{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-align:right;margin-top:4px}
+.fn{margin:0;font-size:16px}
+.tip{margin:0;padding:10px 12px;border-left:3px solid var(--secondary);background:var(--plate);border-radius:0 8px 8px 0;font-size:14px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.exlist{display:grid;gap:6px}
+.ex{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;text-align:left;width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;padding:8px 12px;border-radius:9px;cursor:pointer}
+.ex:hover{border-color:var(--muted);background:var(--plate)}
+.ex .n{font-weight:500;min-width:0}
+.ex .n small{display:block;font-family:var(--f-display);font-size:14px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.tag{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tag.c{border-color:var(--ink);color:var(--ink)}
+.back{justify-self:start;border:0;background:none;color:var(--primary);font:inherit;font-weight:500;cursor:pointer;padding:0}
+.toplink{display:none}
+@media (max-width:860px){.toplink{display:inline}}
+.empty{color:var(--muted);font-size:14px;margin:0}
+
+@media (min-width:861px){.detail{max-height:calc(100vh - 24px);overflow:auto;grid-auto-rows:max-content}}
+
+/* Demo player */
+.demo{margin:0;display:grid;gap:8px}
+.stage{position:relative;border-radius:10px;overflow:hidden;background:#1b1f23;aspect-ratio:3/2;max-width:100%}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .25s}
+.stage img.on{opacity:1}
+.badge{position:absolute;left:10px;bottom:10px;background:rgba(15,19,23,.78);color:#fff;font-size:12px;padding:3px 9px;border-radius:6px;font-family:var(--f-body)}
+.live{position:absolute;right:10px;top:10px;font-family:var(--f-mono);font-size:11px;color:#fff;background:rgba(15,19,23,.6);padding:2px 7px;border-radius:5px;display:flex;align-items:center;gap:5px}
+.live i{width:7px;height:7px;border-radius:50%;background:#FF5363}
+.live.paused i{background:#9aa}
+.ctrl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ctrl button{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;padding:5px 12px;border-radius:8px;cursor:pointer}
+.ctrl button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.ctrl a,.yt{margin-left:auto;color:var(--primary);font-size:14px;text-decoration:none;font-weight:500}
+.ctrl a:hover,.yt:hover{text-decoration:underline}
+.noimg{aspect-ratio:3/2;border-radius:10px;border:1px dashed var(--line);display:grid;place-items:center;text-align:center;color:var(--muted);font-size:14px;padding:16px;background:var(--plate)}
+.ex{grid-template-columns:64px minmax(0,1fr) auto}
+.ex .th{width:64px;height:43px;border-radius:6px;object-fit:cover;background:var(--chip);display:block}
+
+/* Library */
+.lib{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px}
+.libhead{display:grid;gap:10px}
+.libhead h2{margin:0;font-size:26px;line-height:1.2}
+.libhead p{margin:0;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+@media (max-width:420px){.grid{grid-template-columns:1fr 1fr;gap:8px}}
+.card{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;padding:0;border-radius:10px;overflow:hidden;cursor:pointer;text-align:left;display:flex;flex-direction:column;min-width:0}
+.card:hover{border-color:var(--muted)}
+.card .pic{position:relative;aspect-ratio:3/2;background:var(--chip)}
+.card .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .3s}
+.card .pic img.b{opacity:0}
+.card:hover .pic img.b,.card:focus-visible .pic img.b{opacity:1}
+.card .pic .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}
+.card .txt{padding:8px 10px 10px;display:grid;gap:2px;min-width:0}
+.card .t1{font-weight:700;font-size:15px}
+.card .t2{font-family:var(--f-display);color:var(--muted);font-size:14px;line-height:1.2}
+.card .t3{font-size:12px;color:var(--muted);margin-top:4px;display:block}
+.card .t3 .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:1px}
+.credit{margin:0;font-size:12px;color:var(--muted)}
+.credit a{color:inherit}
+
+.zoom{display:flex;align-items:center;gap:8px;margin-top:-6px}
+.zoom button{width:34px;height:34px;flex-shrink:0;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:18px;line-height:1;cursor:pointer}
+.zoom button.auto{width:auto;padding:0 12px;font-size:14px}
+.zoom button.auto[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.zoom input{flex:1;min-width:0;accent-color:var(--primary)}
+.zhint{margin:-8px 0 0;font-size:12px;color:var(--muted)}
+#loupe-svg{cursor:grab;touch-action:pan-y}
+.loupe.dragging #loupe-svg{cursor:grabbing}
+.lead{stroke:var(--ink);opacity:.55;fill:none;pointer-events:none}
+.leaddot{fill:var(--ink);opacity:.7;pointer-events:none}
+.lead.on{stroke:var(--primary);opacity:.9}.leaddot.on{fill:var(--primary);opacity:1}
+/* Planner */
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:16px}
+.plan h2{margin:0;font-size:26px;line-height:1.2}
+.plan .sub{margin:0;color:var(--muted);font-size:14px}
+.ctlrow{display:grid;gap:10px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctl .lab{font-size:13px;font-weight:700;color:var(--muted);min-width:4.5em}
+.area{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;font-weight:500;padding:7px 14px;border-radius:10px;cursor:pointer;display:inline-flex;gap:6px;align-items:baseline}
+.area small{font-family:var(--f-display);color:var(--muted);font-size:13px;letter-spacing:.04em}
+.area:hover{border-color:var(--muted)}
+.area[aria-pressed="true"]{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 10%,var(--surface))}
+.area[aria-pressed="true"] small{color:var(--primary)}
+.seg{display:flex;gap:4px;background:var(--chip);border-radius:10px;padding:4px}
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:14px;padding:5px 12px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.pbody{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:18px;align-items:start}
+@media (max-width:860px){.pbody{grid-template-columns:minmax(0,1fr)}}
+.pfigs{background:var(--plate);border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px}
+.pfigs svg{width:100%;height:auto;display:block}
+.pfigs .figlabel{text-align:center;font-size:12px}
+.pcol{display:grid;gap:16px;min-width:0}
+.pblock h3{margin:0 0 8px;font-size:15px;font-weight:700;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.pblock h3 span{font-weight:400;font-size:13px;color:var(--muted)}
+.mgroups{display:grid;gap:8px}
+.mg{display:grid;grid-template-columns:4.5em minmax(0,1fr);gap:8px;align-items:start}
+.mg .an{font-weight:700;font-size:14px;padding-top:4px}
+.prows{display:grid;gap:6px}
+.prow{display:grid;grid-template-columns:22px 64px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;padding:8px 12px 8px 10px;border-radius:10px;cursor:pointer}
+.prow:hover{border-color:var(--muted);background:var(--plate)}
+.prow .no{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:center}
+.prow .th{width:64px;height:43px;border-radius:6px;object-fit:cover;background:var(--chip);display:block}
+.prow .nm{min-width:0;display:grid}
+.prow .nm b{font-weight:700}
+.prow .nm small{font-size:12px;color:var(--muted)}
+.prow .dose{text-align:right;font-family:var(--f-mono);font-size:13px;white-space:nowrap}
+.prow .dose small{display:block;font-family:var(--f-body);font-size:11px;color:var(--muted)}
+@media (max-width:420px){.prow{grid-template-columns:52px minmax(0,1fr) auto}.prow .no{display:none}.prow .th{width:52px;height:35px}}
+.psum{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
+.psum b{color:var(--ink);font-family:var(--f-mono);font-weight:500}
+.warn{margin:0;padding:10px 12px;border-left:3px solid var(--primary);background:var(--plate);border-radius:0 8px 8px 0;font-size:14px}
+.pempty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;font-size:14px}
+.eqctl{align-items:flex-start}
+.eqctl .lab{padding-top:5px}
+.eqwrap{display:grid;gap:8px;min-width:0;flex:1}
+.eqchip{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;padding:5px 12px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.eqchip i{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--muted);display:inline-block;position:relative;flex-shrink:0}
+.eqchip[aria-pressed="true"],.eqchip.fixed{border-color:var(--ink)}
+.eqchip[aria-pressed="true"] i,.eqchip.fixed i{background:var(--ink);border-color:var(--ink)}
+.eqchip[aria-pressed="true"] i::after,.eqchip.fixed i::after{content:"";position:absolute;left:3.5px;top:0.5px;width:4px;height:8px;border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.eqchip.fixed{cursor:default;color:var(--muted)}
+.ex.na,.card.na{opacity:.5}
+.ex.na:hover,.card.na:hover{opacity:.8}
+.tag.miss{border-color:var(--primary);color:var(--primary)}
+.card .t4{font-size:12px;color:var(--muted)}
+.avchip{margin-left:auto}
+.eqline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px;margin-top:-4px}
+.eqline span{color:var(--muted);margin-right:2px}
+.eqline em{font-style:normal;color:var(--muted);font-size:13px}
+.eqtag{font-weight:500;padding:2px 10px;border-radius:999px;background:var(--chip);font-size:13px}
+.eqtag.off{background:transparent;border:1px dashed var(--primary);color:var(--primary)}
+.altbox{border:1px solid var(--primary);border-radius:10px;padding:12px;display:grid;gap:8px;background:color-mix(in srgb,var(--primary) 6%,var(--surface))}
+.altbox p{margin:0;font-size:14px}
+@media (max-width:600px){.avchip{margin-left:0}}
+.progtabs{width:max-content;max-width:100%}
+.progtabs button{font-size:15px;font-weight:500;padding:7px 16px}
+.daytabs{width:max-content}
+.prow.na{opacity:.55;cursor:default}
+.wkbars{display:grid;gap:6px}
+.wkbar{display:grid;grid-template-columns:5em minmax(0,1fr) 3.5em;gap:10px;align-items:center;border:0;background:none;padding:2px 0;font:inherit;color:var(--ink);cursor:pointer;text-align:left}
+.wkbar .wl{font-size:14px;font-weight:500}
+.wkbar .wt{position:relative;height:10px;border-radius:5px;background:var(--chip)}
+.wkbar .wt i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--primary)}
+.wkbar .wt em{position:absolute;top:-3px;bottom:-3px;border-left:1.5px dashed var(--muted)}
+.wkbar .wv{font-family:var(--f-mono);font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+.wnote{margin:6px 0 0;font-size:12px;color:var(--muted)}
+.weeks{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;gap:6px;align-items:stretch}
+.wstep{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;font-size:18px;cursor:pointer}
+.wstep:disabled{opacity:.35;cursor:default}
+.wlist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.wbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;border-radius:9px;padding:6px 4px;cursor:pointer;display:grid;gap:1px;text-align:center}
+.wbtn b{font-size:13px;font-weight:700}
+.wbtn span{font-size:12px;color:var(--muted)}
+.wbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.wbtn[aria-pressed="true"] span{color:var(--surface);opacity:.8}
+@media (max-width:480px){.wlist{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tips{margin:0;padding-left:1.2em;display:grid;gap:4px;font-size:14px}
+.eqbar{background:var(--plate);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:6px}
+.eqtop{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.eqlab{font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.eqlab::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--primary)}
+.eqbar .chip{font-size:13px;padding:3px 10px}
+.eqbar .chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
+.eqmore summary{cursor:pointer;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;list-style:none}
+.eqmore summary::-webkit-details-marker{display:none}
+.eqmore summary::before{content:"▸";font-size:11px;transition:transform .15s}
+.eqmore[open] summary::before{transform:rotate(90deg)}
+.eqmore summary span{color:var(--ink);font-size:13px}
+.eqmore .crow{margin-top:8px}
+.eqbar .eqchip{font-size:13px;padding:4px 10px}
+@media (prefers-reduced-motion:reduce){.eqmore summary::before{transition:none}}
+.dlg{border:0;padding:0;border-radius:18px;background:var(--surface);color:var(--ink);width:min(1200px,calc(100vw - 48px));height:calc(100dvh - 48px);max-width:none;max-height:none;box-shadow:0 24px 70px rgba(0,0,0,.35);overflow:hidden}
+.dlg[open]{display:flex;flex-direction:column}
+.dlg::backdrop{background:rgba(10,14,18,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.dlgbar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);flex-shrink:0}
+.dlgtitle{flex:1;font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.dlgbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;padding:6px 12px;border-radius:9px;cursor:pointer}
+.dlgbtn:hover{border-color:var(--muted)}
+.dlgbody{overflow:auto;padding:18px 20px 24px;overscroll-behavior:contain;flex:1;min-height:0}
+.dlg .detail{position:static;max-height:none;overflow:visible;border:0;padding:0;background:transparent}
+.dlg .toplink{display:none!important}
+.dcols,.dcol{display:grid;gap:14px;min-width:0;align-content:start}
+.dlgbody{padding:22px 28px 28px}
+.dlg .dhead h2{font-size:32px}
+@media (min-width:900px){.dlg .dcols{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px}}
+@media (min-width:601px) and (max-width:899px){.dlg{width:calc(100vw - 24px);height:calc(100dvh - 24px)}}
+html:has(dialog[open]){overflow:hidden}
+@media (max-width:600px){
+  .dlg{width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0}
+  .dlgbar{padding-top:max(10px,env(safe-area-inset-top,0px));padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .dlgbody{padding:14px max(16px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+}
+.vtabs{width:max-content}
+.ytbox{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000;max-width:100%}
+.ytbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vnote{font-size:12px;color:var(--muted)}
+.ctrl a.more{margin-left:0;color:var(--muted);font-weight:400;font-size:13px}
+.tooltip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:13px;padding:3px 9px;border-radius:6px;z-index:20;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.m{transition:none}}
+/* ===== Layout v2: nav, hero, gear band, sections ===== */
+:root{--navh:56px;--band:#1C2731;--bandfg:#EEF2F5;--bandline:rgba(238,242,245,.22);--fat:#4F7FA8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--band:#1A2129;--bandfg:#E5EAEE;--bandline:rgba(229,234,238,.18);--fat:#7FA9CF}}
+:root[data-theme="dark"]{--band:#1A2129;--bandfg:#E5EAEE;--bandline:rgba(229,234,238,.18);--fat:#7FA9CF}
+.wrap{max-width:1240px;gap:22px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:16;background:var(--bg)}
+.topnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:15;margin-top:-20px;margin-bottom:6px;
+  margin-left:calc(-1 * max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+  background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navin{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:16px;height:var(--navh);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{font-weight:700;font-size:16px;display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.brand small{font-family:var(--f-display);color:var(--primary);letter-spacing:.12em;text-transform:uppercase;font-size:12px;font-weight:600}
+.navlinks{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:14px;font-weight:500;padding:6px 12px;border-radius:999px;white-space:nowrap;cursor:pointer}
+.navlinks button:hover{color:var(--ink)}
+.navlinks button.on{background:var(--ink);color:var(--surface)}
+@media (max-width:600px){.brand{display:none}}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 32px;align-items:end;padding-top:14px}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero h1{font-size:clamp(36px,7vw,60px);line-height:1.05;letter-spacing:-.01em;margin-top:4px}
+.hero .lede{font-size:16px;max-width:46ch;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.stats div{padding:12px 18px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0}
+.stats dt{font-size:12px;color:var(--muted);white-space:nowrap}
+.stats dd{margin:0;font-family:var(--f-display);font-weight:700;font-size:34px;line-height:1.05;font-variant-numeric:tabular-nums}
+@media (max-width:460px){.stats div{padding:8px 10px}.stats dd{font-size:26px}}
+.gear{background:var(--band);color:var(--bandfg);border-radius:16px;padding:16px 18px;display:grid;gap:10px}
+.gearhead{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.gearhead b{font-size:16px}
+.gearhead span{font-size:13px;opacity:.7}
+.gear .chip,.gear .eqchip{background:transparent;color:var(--bandfg);border-color:var(--bandline)}
+.gear .chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
+.gear .eqchip i{border-color:var(--bandfg)}
+.gear .eqchip[aria-pressed="true"]{border-color:var(--bandfg)}
+.gear .eqchip[aria-pressed="true"] i,.gear .eqchip.fixed i{background:var(--bandfg);border-color:var(--bandfg)}
+.gear .eqchip[aria-pressed="true"] i::after,.gear .eqchip.fixed i::after{border-color:var(--band)}
+.gear .eqchip.fixed{color:var(--bandfg);opacity:.7;border-color:var(--bandline)}
+.sect{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:grid;gap:18px;scroll-margin-top:calc(var(--navh) + 14px);overflow:clip;min-width:0}
+@media (max-width:600px){.sect{padding:16px;border-radius:14px}}
+.sect{grid-template-columns:minmax(0,1fr)}
+.sect>*{min-width:0}
+#weekout,#planout,#progout,#foodout{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
+.shead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 20px;flex-wrap:wrap;position:relative}
+.shead>*{position:relative;z-index:1}
+.shead::after{content:attr(data-word);position:absolute;right:-6px;top:-30px;z-index:0;font-family:var(--f-display);font-weight:700;font-size:clamp(46px,9vw,104px);line-height:1;letter-spacing:.03em;color:transparent;-webkit-text-stroke:1px var(--line);pointer-events:none;user-select:none}
+.sect h2{margin:2px 0 0;font-size:clamp(24px,4vw,34px);line-height:1.15;text-wrap:balance}
+.sect .sub{margin:6px 0 0;color:var(--muted);font-size:14px;max-width:62ch}
+.main .plate{border-radius:14px}
+.detail{top:calc(var(--navh) + env(safe-area-inset-top,0px) + 12px);scroll-margin-top:calc(var(--navh) + 14px)}
+@media (min-width:861px){.detail{max-height:calc(100vh - var(--navh) - 30px)}}
+.enm{font-family:var(--f-display);font-weight:500;font-size:14px;color:var(--muted);margin-left:8px;letter-spacing:.02em}
+.copy{border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;font-size:12px;padding:1px 8px;border-radius:6px;cursor:pointer;margin-left:6px;vertical-align:2px}
+.copy:hover{color:var(--ink);border-color:var(--muted)}
+/* weekly menu */
+.splits{width:max-content;max-width:100%;overflow-x:auto}
+.splits button{display:grid;gap:0;text-align:left;padding:6px 14px}
+.splits button b{font-size:15px;color:inherit}
+.splits button span{font-size:12px}
+.weekstrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wday{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;border-radius:12px;padding:10px 4px;display:grid;gap:3px;justify-items:center;cursor:pointer;min-width:0;box-shadow:inset 0 3px 0 transparent}
+.wday .d{font-family:var(--f-display);font-size:13px;color:var(--muted);letter-spacing:.06em}
+.wday .n{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.wday.train{box-shadow:inset 0 3px 0 var(--primary)}
+.wday.rest{background:var(--plate)}
+.wday.rest .n{font-weight:500;color:var(--muted)}
+.wday[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.wday[aria-pressed="true"] .d,.wday[aria-pressed="true"] .n{color:var(--surface)}
+@media (max-width:620px){.weekstrip{grid-template-columns:repeat(7,minmax(70px,1fr));overflow-x:auto;padding-bottom:4px}.wday{padding:8px 2px;border-radius:10px}.wday .n{font-size:12px}}
+.dayhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dayhead h3{margin:0;font-size:22px;line-height:1.2}
+.dayhead p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.restcard{border:1px dashed var(--line);border-radius:12px;padding:16px;display:grid;gap:6px;background:var(--plate)}
+.restcard p{margin:0;font-size:14px}
+.vol{display:grid;gap:8px}
+.wkbar .wt em.hi{border-left-style:solid;opacity:.5}
+/* nutrition */
+.nut{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:860px){.nut{grid-template-columns:minmax(0,1fr)}}
+.nform{background:var(--plate);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:14px}
+.field{display:grid;gap:6px;min-width:0}
+.field .fl{font-size:13px;font-weight:700;color:var(--muted)}
+.field input,.field select{font:inherit;font-size:16px;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+.field input:focus-visible,.field select:focus-visible{outline:2px solid var(--primary);outline-offset:1px}
+.frow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.nform .seg{width:100%}
+.nform .seg button{flex:1}
+.nres{display:grid;gap:18px;min-width:0}
+.kcal{display:flex;align-items:baseline;gap:6px 12px;flex-wrap:wrap}
+.kcal b{font-family:var(--f-display);font-size:clamp(48px,9vw,72px);line-height:1;font-variant-numeric:tabular-nums}
+.kcal .u{font-size:18px;font-weight:700}
+.kcal .m{color:var(--muted);font-size:14px;flex-basis:100%}
+.macrobar{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px}
+.macrobar i{display:block;height:100%}
+.mtiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:1px;min-width:0}
+.mt .k{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.mt .k i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.mt .v{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.mt .v small{font-size:16px;margin-left:2px}
+.mt .s{font-size:12px;color:var(--muted)}
+@media (max-width:420px){.mt{padding:8px}.mt .v{font-size:24px}}
+.foods{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px}
+.food{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--surface);display:grid;gap:0}
+.food b{font-family:var(--f-display);font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums}
+.food b small{font-size:14px;margin-left:2px}
+.food span{font-size:13px}
+.ntips{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:14px}
+.disc{font-size:12px;color:var(--muted);margin:0}
+.nerr{color:var(--primary);font-size:14px;margin:0}
+</style>
+
+</head>
+<body>
+<nav class="topnav" aria-label="頁面導覽">
+  <div class="navin">
+    <span class="brand">肌群地圖<small>Muscle Map</small></span>
+    <div class="navlinks" id="navlinks">
+      <button type="button" data-go="map">肌群地圖</button>
+      <button type="button" data-go="plan">今天練什麼</button>
+      <button type="button" data-go="week">一週菜單</button>
+      <button type="button" data-go="prog">特別計畫</button>
+      <button type="button" data-go="food">飲食教練</button>
+      <button type="button" data-go="lib">動作圖庫</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="herotext">
+      <div class="eyebrow">Muscle Map · 訓練對照手冊</div>
+      <h1>全身肌群地圖</h1>
+      <p class="lede">從認識肌肉開始，到排出每天和每週的課表，再到吃多少。每個區塊都可以選你現在有的器材，在任何一個區塊切換，全部區塊會一起換成做得到的動作。</p>
+    </div>
+    <dl class="stats">
+      <div><dt>肌群</dt><dd>21</dd></div>
+      <div><dt>動作</dt><dd id="stat-ex">63</dd></div>
+      <div><dt>一週菜單</dt><dd>3</dd></div>
+      <div><dt>特別計畫</dt><dd>2</dd></div>
+    </dl>
+  </header>
+
+
+  <section class="sect" id="map" aria-label="肌群地圖">
+    <div class="shead" data-word="ANATOMY">
+      <div><div class="eyebrow">Anatomy · 認識肌肉</div><h2>肌群地圖</h2>
+      <p class="sub">點身體上的肌肉，看放大圖和該做的動作。點動作，可以看到它練到哪些肌肉。</p></div>
+      <div class="legend" aria-label="顏色說明"><span><i class="sw p"></i>主要肌群</span><span><i class="sw s"></i>輔助肌群</span><span><i class="sw n"></i>其他</span></div>
+    </div>
+      <div class="eqbar" data-eqbar="map"></div>
+  <div class="main">
+      <div class="plate" aria-label="全身圖">
+        <div class="tabs" role="group" aria-label="瀏覽方式">
+          <button id="tab-muscle" type="button" data-tab="muscle" aria-pressed="true">依肌群</button>
+          <button id="tab-pattern" type="button" data-tab="pattern" aria-pressed="false">依動作模式</button>
+        </div>
+        <div class="figs">
+          <div class="fig"><svg id="fig-front" viewBox="0 0 200 440" role="img" aria-label="身體正面"></svg><div class="figlabel">Anterior<b>正面</b></div></div>
+          <div class="fig"><svg id="fig-back" viewBox="0 0 200 440" role="img" aria-label="身體背面"></svg><div class="figlabel">Posterior<b>背面</b></div></div>
+        </div>
+        <p class="hint">點圖上的肌肉，或用下面的按鈕選擇</p>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="detail" id="detail" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="sect" id="plan" aria-label="今天練什麼">
+    <div class="shead" data-word="TODAY">
+      <div><div class="eyebrow">Workout Builder · 今天練哪裡</div><h2>今天練什麼？</h2>
+      <p class="sub">選擇想練的部位和時間，會列出目標肌群和一份照順序做的課表。</p></div>
+    </div>
+    <div class="eqbar" data-eqbar="plan"></div>
+    <div class="ctlrow">
+      <div class="ctl" role="group" aria-label="選擇部位"><span class="lab">部位</span><span class="ctl" id="areas"></span></div>
+      <div class="ctl"><span class="lab">時間</span><div class="seg" id="times" role="group" aria-label="訓練時間"></div></div>
+    </div>
+    <div id="planout"></div>
+  </section>
+
+  <section class="sect" id="week" aria-label="一週菜單">
+    <div class="shead" data-word="WEEK">
+      <div><div class="eyebrow">Weekly Split · 一週菜單</div><h2>一週訓練菜單</h2>
+      <p class="sub">大多數人常用的三種排法。先選每週能練幾天，再點星期幾，看當天要做什麼。</p></div>
+    </div>
+    <div class="eqbar" data-eqbar="week"></div>
+    <div class="seg splits" id="splits" role="group" aria-label="每週天數"></div>
+    <div id="weekout"></div>
+  </section>
+
+  <section class="sect" id="prog" aria-label="特別訓練計畫">
+    <div class="shead" data-word="FOCUS">
+      <div><div class="eyebrow">Specialization · 7 週計畫</div><h2>特別訓練計畫</h2>
+      <p class="sub">專門加強一個部位的 7 週計畫，可以加在你平常的訓練之後做。</p></div>
+    </div>
+    <div class="eqbar" data-eqbar="prog"></div>
+    <div class="seg progtabs" id="progtabs" role="group" aria-label="選擇計畫"></div>
+    <div id="progout"></div>
+  </section>
+
+  <section class="sect" id="food" aria-label="飲食教練">
+    <div class="shead" data-word="FUEL">
+      <div><div class="eyebrow">Nutrition Coach · 吃多少</div><h2>飲食教練</h2>
+      <p class="sub">輸入你的身體數據和目標，算出每天的熱量、蛋白質、脂肪和碳水，並換算成實際食物份量。</p></div>
+    </div>
+    <div id="foodout"></div>
+  </section>
+
+  <section class="sect" id="lib" aria-label="動作圖庫">
+    <div class="shead" data-word="LIBRARY">
+      <div><div class="eyebrow">Exercise Library · <span id="libcount">63</span> 個動作</div><h2>動作圖庫</h2>
+      <p class="sub">滑鼠移到卡片上會切換到第二個姿勢。點卡片看動態示範和練到的肌群。</p></div>
+    </div>
+    <div class="eqbar" data-eqbar="lib"></div>
+    <div class="crow" id="libfilter" role="group" aria-label="篩選動作模式"></div>
+    <div class="grid" id="libgrid"></div>
+    <p class="credit">示範照片來自 <a href="https://github.com/yuhonas/free-exercise-db" target="_blank" rel="noopener">Free Exercise DB</a>（公眾領域，可自由使用）。資料庫沒有照片的 6 個動作（彈力繩胸推、划船、下拉、彎舉、單手提物走、脛前肌抬起）改用自繪的兩格示意圖。顏色較淡的卡片代表你目前選的器材做不到。</p>
+  </section>
+</div>
+<dialog class="dlg" id="dlg" aria-labelledby="dlgtitle">
+  <div class="dlgbar">
+    <button type="button" class="dlgbtn" id="dlgback" hidden>‹ 返回</button>
+    <span class="dlgtitle" id="dlgtitle">動作說明</span>
+    <button type="button" class="dlgbtn" id="dlgclose">關閉 ✕</button>
+  </div>
+  <div class="dlgbody" id="dlgbody"></div>
+</dialog>
+<div class="tooltip" id="tip" hidden></div>
+
+<script>
+// ---------- Drawing (right half; left half is mirrored) ----------
+const SIL='M100,54 L108,55 L110,68 Q122,74 140,79 Q154,84 157,100 L159,135 Q161,158 160,175 Q168,200 168,236 L171,262 Q172,273 164,272 L159,262 L158,242 Q151,214 145,180 L141,152 L138,122 Q136,152 130,185 Q134,200 138,225 Q142,255 136,295 L130,322 Q137,350 130,380 L124,408 L129,425 Q126,433 108,431 L108,410 Q104,380 106,350 L108,322 Q105,290 104,262 L101,244 L100,244 Z';
+const FRONT=[
+ ['upperTraps','M107,60 L118,71 L135,79 L124,82 L109,76 Z'],
+ ['chest','M101,100 L121,100 L137,93 L136,116 Q120,129 102,126 Z'],
+ ['upperChest','M101,86 L127,82 L137,93 L121,100 L101,100 Z'],
+ ['frontDelt','M127,82 L139,79 L146,95 L144,112 L137,95 Z'],
+ ['sideDelt','M139,79 Q151,83 156,99 L153,116 L144,112 L146,95 Z'],
+ ['biceps','M140,117 L151,115 Q154,140 151,168 L144,170 Q139,145 140,117 Z'],
+ ['triceps','M153,117 L157,124 Q160,146 157,166 L153,169 Q156,142 153,117 Z'],
+ ['forearm','M144,174 L157,172 Q166,198 166,236 L158,240 Q151,212 144,174 Z'],
+ ['abs','M101,128 L116,126 Q118,165 117,200 Q114,215 108,222 L101,226 Z'],
+ ['obliques','M118,126 L135,119 Q133,160 129,192 L132,210 L118,201 Q119,165 118,126 Z'],
+ ['adductors','M101,241 L114,232 L108,262 Q107,285 108,300 Q103,285 101,262 Z'],
+ ['quads','M114,232 L135,216 Q141,248 136,290 L128,316 L112,318 Q107,296 108,262 Z'],
+ ['calves','M108,330 L116,330 L116,365 L111,395 Q106,370 108,330 Z'],
+ ['tibialis','M118,330 L129,326 Q132,355 123,400 L117,398 Q120,360 118,330 Z'],
+];
+const BACK=[
+ ['upperTraps','M101,60 L108,60 L122,74 L140,81 L128,90 L101,88 Z'],
+ ['midBack','M101,88 L128,90 L119,108 L108,128 L101,150 Z'],
+ ['rearDelt','M128,90 L141,82 L147,96 L146,112 L136,100 Z'],
+ ['sideDelt','M141,82 Q152,85 156,100 L153,116 L146,112 L147,96 Z'],
+ ['lats','M108,128 L119,108 L137,102 L139,120 Q134,155 126,185 L114,192 Q110,160 108,128 Z'],
+ ['erectors','M101,150 L108,128 Q110,160 114,192 L112,212 L101,214 Z'],
+ ['triceps','M142,113 L153,116 Q159,140 157,168 L146,172 Q141,145 142,113 Z'],
+ ['forearm','M146,175 L158,172 Q166,200 166,236 L158,240 Q152,212 146,175 Z'],
+ ['gluteMed','M116,207 L131,198 L137,214 L132,216 L121,212 Z'],
+ ['glutes','M101,216 L120,211 L133,216 Q140,236 134,258 L112,262 L101,256 Z'],
+ ['hamstrings','M103,262 L112,264 L134,260 Q137,290 130,318 L112,320 Q106,296 103,262 Z'],
+ ['calves','M109,324 L130,322 Q136,350 127,378 L112,380 Q105,352 109,324 Z'],
+ ['calves','M112,382 L127,380 L123,402 L114,402 Z'],
+];
+const FRONT_D=['M104,82 Q118,79 136,80','M104,106 Q119,111 134,101','M104,115 Q120,121 135,109','M101,146 L117,145','M101,166 L117.5,165','M101,186 L117,185','M141,88 Q146,98 144,110','M146,122 Q148,146 147,166','M151,180 Q158,205 161,232','M121,236 Q126,270 119,312','M130,228 Q135,262 129,306','M121,132 L130,152','M121,156 L128,176','M112,322 Q118,314 124,322 Q118,330 112,322 Z','M123,334 Q125,360 120,392','M104,52 L109,72'];
+const BACK_D=['M100,62 L100,214','M110,96 L127,96 L121,122 Z','M113,140 Q125,128 136,114','M113,165 Q124,152 132,138','M105,155 L109,200','M104,232 Q118,226 134,230','M104,261 Q119,267 133,260','M120,266 Q121,292 119,316','M119,326 Q120,350 119,372','M145,128 Q150,145 149,166','M152,182 Q158,205 161,232','M104,74 Q114,78 124,80'];
+const MIRROR='matrix(-1 0 0 1 200 0)';
+
+// ---------- Content ----------
+const M={
+ upperChest:{zh:'上胸',en:'Upper Chest',view:'front',fn:'把手臂往前上方舉。讓胸部上方更飽滿。',tip:'上斜臥推的椅背約 30° 最能練到上胸，太斜會變成練肩。'},
+ chest:{zh:'胸大肌',en:'Pectoralis Major',view:'front',fn:'把手臂往前推、往身體中間合。是所有推的動作的主力。',tip:'推的時候肩胛骨往後下夾緊，胸口挺起，肩膀會比較安全。'},
+ frontDelt:{zh:'前三角肌',en:'Anterior Deltoid',view:'front',fn:'把手臂往前、往上舉。',tip:'各種推的動作都會練到它，通常不需要額外做前平舉。'},
+ sideDelt:{zh:'側三角肌',en:'Lateral Deltoid',view:'front',fn:'把手臂往旁邊舉。讓肩膀看起來更寬。',tip:'複合動作很難練到，最好加側平舉。用輕重量，慢慢放下。'},
+ rearDelt:{zh:'後三角肌',en:'Posterior Deltoid',view:'back',fn:'把手臂往後打開。對改善圓肩和肩膀健康很重要。',tip:'臉拉和反向飛鳥是最直接的動作，重量不用大。'},
+ biceps:{zh:'二頭肌',en:'Biceps Brachii',view:'front',fn:'彎曲手肘，並把手掌往上轉。',tip:'手肘固定在身體旁邊，不要甩身體借力。'},
+ triceps:{zh:'三頭肌',en:'Triceps Brachii',view:'back',fn:'伸直手肘。約佔上臂 2/3 的大小，想練粗手臂要重視它。',tip:'過頭伸展能練到三頭最長的那一頭。'},
+ forearm:{zh:'前臂',en:'Forearm Flexors & Extensors',view:'front',fn:'握緊東西、轉動手腕。',tip:'握力常常是硬舉和引體向上的限制，搬運類動作能有效加強。'},
+ upperTraps:{zh:'上斜方肌',en:'Upper Trapezius',view:'back',fn:'聳肩，把肩胛骨往上提。',tip:'硬舉和農夫走路已經練到很多，聳肩只是補強。'},
+ midBack:{zh:'中背（中斜方、菱形肌）',en:'Mid Trapezius & Rhomboids',view:'back',fn:'把兩邊肩胛骨往中間夾。讓背變厚、姿勢更挺。',tip:'划船時想像把肩胛骨夾住一支筆，在最後停一下。'},
+ lats:{zh:'背闊肌',en:'Latissimus Dorsi',view:'back',fn:'把手臂從上往下、往後拉。是讓背變寬的主要肌肉。',tip:'想像用手肘往下、往褲子口袋拉，而不是用手拉。'},
+ abs:{zh:'腹直肌',en:'Rectus Abdominis',view:'front',fn:'彎曲脊椎，也負責抵抗腰往後凹。',tip:'深層的腹橫肌在它下面，棒式和死蟲式可以練到。'},
+ obliques:{zh:'腹斜肌',en:'Obliques',view:'front',fn:'轉身、側彎，也負責抵抗身體被轉動。',tip:'抗旋轉動作（例如抗旋轉推）比一直轉身更安全有效。'},
+ erectors:{zh:'豎脊肌',en:'Erector Spinae',view:'back',fn:'讓脊椎保持挺直。硬舉和深蹲時保護下背。',tip:'動作中背保持中立就是在練它，不需要大量專門動作。'},
+ glutes:{zh:'臀大肌',en:'Gluteus Maximus',view:'back',fn:'把髖往前推、從彎腰站直。是全身最大的肌肉。',tip:'臀推頂端用力夾臀，深蹲蹲深一點都能多練到。'},
+ gluteMed:{zh:'臀中肌',en:'Gluteus Medius',view:'back',fn:'把腿往外打開，單腳站立時穩定骨盆。',tip:'深蹲時膝蓋往內夾，常跟臀中肌無力有關。'},
+ quads:{zh:'股四頭肌',en:'Quadriceps',view:'front',fn:'伸直膝蓋。蹲下、站起、上樓梯的主力。',tip:'膝蓋往前超過腳尖是正常的，重點是腳掌全貼地、膝蓋跟腳尖同方向。'},
+ hamstrings:{zh:'腿後肌群',en:'Hamstrings',view:'back',fn:'彎曲膝蓋，也幫忙把髖往前推。',tip:'需要兩種動作：髖鉸鏈（羅馬尼亞硬舉）和彎膝蓋（腿彎舉）。'},
+ adductors:{zh:'內收肌',en:'Adductors',view:'front',fn:'把腿往內合，深蹲時幫忙站起來。',tip:'寬站距深蹲和分腿蹲都會練到。'},
+ calves:{zh:'小腿',en:'Gastrocnemius & Soleus',view:'back',fn:'踮腳尖。走路、跑步、跳躍都會用到。',tip:'站姿提踵（膝蓋直）練腓腸肌，坐姿提踵（膝蓋彎）練比目魚肌。'},
+ tibialis:{zh:'脛前肌',en:'Tibialis Anterior',view:'front',fn:'把腳尖往上勾，幫助腳踝穩定。',tip:'常被忽略，對跑步和膝蓋健康有幫助。'},
+};
+const GROUPS=[
+ ['胸與肩','Chest & Shoulders',['upperChest','chest','frontDelt','sideDelt','rearDelt']],
+ ['手臂','Arms',['biceps','triceps','forearm']],
+ ['背部','Back',['upperTraps','midBack','lats','erectors']],
+ ['核心','Core',['abs','obliques']],
+ ['臀與腿','Hips & Legs',['glutes','gluteMed','quads','hamstrings','adductors','calves','tibialis']],
+];
+const ORDER=GROUPS.flatMap(g=>g[2]);
+const PAT={
+ hpush:['水平推','把重量往前推離身體，主要練胸。'],
+ vpush:['垂直推','把重量往頭上推，主要練肩。'],
+ hpull:['水平拉','划船類，把重量拉向肚子，讓背變厚。'],
+ vpull:['垂直拉','從上往下拉，讓背變寬。'],
+ squat:['蹲','膝蓋和髖一起彎，大腿前側為主。'],
+ hinge:['髖鉸鏈','屁股往後推、背打直，臀部和大腿後側為主。'],
+ single:['單腳','一次練一隻腳，同時練力量和平衡。'],
+ core:['核心','抵抗彎曲、伸展和旋轉，讓脊椎穩定。'],
+ carry:['搬運','拿重物走路，練握力和全身穩定。'],
+ iso:['孤立補強','只動一個關節，用來補強特定肌群。'],
+};
+const E=(id,zh,en,pat,type,p,s,cue)=>({id,zh,en,pat,type,p,s,cue});
+const EX=[
+ E('bench','槓鈴臥推','Bench Press','hpush','複合',['chest'],['upperChest','frontDelt','triceps'],'肩胛骨往後下夾緊，槓放到胸口下緣，腳踩穩地面。'),
+ E('incline','上斜啞鈴臥推','Incline DB Press','hpush','複合',['upperChest'],['chest','frontDelt','triceps'],'椅背約 30°，啞鈴下放到上胸兩側，手肘不要完全打開。'),
+ E('pushup','伏地挺身','Push-up','hpush','複合',['chest'],['frontDelt','triceps','abs'],'身體從頭到腳一直線，胸口接近地面再推起。'),
+ E('dips','雙槓撐體','Dips','hpush','複合',['chest','triceps'],['frontDelt'],'身體前傾多練胸，直立多練三頭。肩膀不舒服就減少深度。'),
+ E('ohp','站姿肩推','Overhead Press','vpush','複合',['frontDelt','sideDelt'],['triceps','upperTraps','upperChest','abs'],'臀部和腹部夾緊，槓從臉前直線推上，過頭後頭往前。'),
+ E('pullup','引體向上','Pull-up','vpull','複合',['lats'],['biceps','midBack','rearDelt','forearm'],'先把肩膀往下沉，再用手肘往口袋方向拉。'),
+ E('pulldown','滑輪下拉','Lat Pulldown','vpull','複合',['lats'],['biceps','midBack'],'身體微微後仰，把把手拉到上胸，不要用身體甩。'),
+ E('row','槓鈴划船','Barbell Row','hpull','複合',['midBack','lats'],['rearDelt','biceps','erectors','forearm'],'身體前傾約 45°，背打直，把槓拉向肚臍。'),
+ E('seatedRow','坐姿划船','Seated Cable Row','hpull','複合',['midBack','lats'],['rearDelt','biceps'],'胸口挺起，拉到肚子時夾緊肩胛骨停一下。'),
+ E('squat','深蹲','Back Squat','squat','複合',['quads','glutes'],['adductors','erectors','abs'],'腳掌全貼地，膝蓋跟腳尖同方向，蹲到大腿約平行或更低。'),
+ E('frontSquat','前蹲舉','Front Squat','squat','複合',['quads'],['glutes','abs','erectors','midBack'],'手肘抬高，上身更直立，更強調大腿前側。'),
+ E('legPress','腿推','Leg Press','squat','複合',['quads','glutes'],['adductors'],'下背貼緊椅背，膝蓋不要往內夾。'),
+ E('deadlift','硬舉','Deadlift','hinge','複合',['glutes','hamstrings','erectors'],['quads','upperTraps','lats','forearm','midBack'],'槓貼著腿，背打直，用腳推地站起來。'),
+ E('rdl','羅馬尼亞硬舉','Romanian Deadlift','hinge','複合',['hamstrings','glutes'],['erectors','forearm'],'膝蓋微彎，屁股往後推，到大腿後側有拉伸感再站起。'),
+ E('hipThrust','臀推','Hip Thrust','hinge','複合',['glutes'],['hamstrings','gluteMed','quads'],'上背靠椅子，下巴微收，頂端用力夾臀。'),
+ E('bss','保加利亞分腿蹲','Bulgarian Split Squat','single','複合',['quads','glutes'],['gluteMed','adductors'],'後腳放椅子上，前腳跟踩穩往下蹲。'),
+ E('lunge','弓步','Lunge','single','複合',['quads','glutes'],['gluteMed','adductors','hamstrings'],'步子夠大，前膝對準腳尖，上身保持直立。'),
+ E('stepUp','登階','Step-up','single','複合',['glutes','quads'],['gluteMed','calves'],'用前腳出力上去，不要用後腳彈起。'),
+ E('plank','棒式','Plank','core','複合',['abs'],['obliques','glutes','frontDelt'],'夾臀、收腹，身體一直線，不要塌腰。'),
+ E('hangingLeg','懸垂舉腿','Hanging Leg Raise','core','孤立',['abs'],['obliques','forearm'],'把骨盆往上捲，不要只是甩腿。'),
+ E('abWheel','健腹輪','Ab Wheel Rollout','core','複合',['abs'],['lats','obliques','triceps'],'從跪姿開始，滾出去時腰不能塌。'),
+ E('pallof','抗旋轉推','Pallof Press','core','孤立',['obliques'],['abs'],'雙手往前推直時，身體不要被繩子拉轉。'),
+ E('sidePlank','側棒式','Side Plank','core','孤立',['obliques'],['gluteMed','abs'],'手肘在肩膀正下方，髖部抬高成一直線。'),
+ E('farmer','農夫走路','Farmer\'s Carry','carry','複合',['forearm','upperTraps'],['abs','obliques','glutes'],'抓緊重物，肩膀往後下，站直慢慢走。'),
+ E('suitcase','單手提物走','Suitcase Carry','carry','複合',['obliques','forearm'],['gluteMed','upperTraps'],'只拿一邊，身體保持直立不要歪。'),
+ E('fly','繩索夾胸','Cable Fly','iso','孤立',['chest'],['upperChest','frontDelt'],'手肘固定微彎，想像抱一棵大樹。'),
+ E('latRaise','側平舉','Lateral Raise','iso','孤立',['sideDelt'],['upperTraps'],'輕重量，手肘微彎帶動，舉到肩膀高度。'),
+ E('facePull','臉拉','Face Pull','iso','孤立',['rearDelt'],['midBack','upperTraps'],'繩子拉向臉，雙手往兩邊分開，大拇指朝後。'),
+ E('revFly','反向飛鳥','Reverse Fly','iso','孤立',['rearDelt'],['midBack'],'身體前傾，手臂往兩旁打開，不要聳肩。'),
+ E('shrug','聳肩','Shrug','iso','孤立',['upperTraps'],['forearm'],'直上直下，頂端停一秒，不要轉肩膀。'),
+ E('pushdown','繩索下壓','Triceps Pushdown','iso','孤立',['triceps'],[],'手肘貼在身體兩側不動，只動前臂。'),
+ E('ohExt','過頭三頭伸展','Overhead Extension','iso','孤立',['triceps'],[],'手肘朝前上方，放到頭後能感覺三頭被拉長。'),
+ E('curl','啞鈴彎舉','Dumbbell Curl','iso','孤立',['biceps'],['forearm'],'手肘固定在身體旁，慢慢放下。'),
+ E('hammer','錘式彎舉','Hammer Curl','iso','孤立',['biceps','forearm'],[],'掌心相對握，同時練到前臂。'),
+ E('legExt','腿伸展','Leg Extension','iso','孤立',['quads'],[],'頂端停一秒，慢慢放下。'),
+ E('legCurl','腿彎舉','Leg Curl','iso','孤立',['hamstrings'],['calves'],'慢慢放下，不要讓臀部抬起。'),
+ E('backExt','背伸展','Back Extension','iso','孤立',['erectors'],['glutes','hamstrings'],'抬到身體一直線就好，不要過度後仰。'),
+ E('abduction','髖外展','Hip Abduction','iso','孤立',['gluteMed'],[],'慢慢控制，不要用身體晃。'),
+ E('adduction','髖內收','Hip Adduction','iso','孤立',['adductors'],[],'在能控制的範圍內動作。'),
+ E('calfRaise','站姿提踵','Standing Calf Raise','iso','孤立',['calves'],[],'腳跟下到最低，再踮到最高停一秒。'),
+ E('tibRaise','脛前肌抬起','Tibialis Raise','iso','孤立',['tibialis'],[],'背靠牆，腳跟著地，把腳尖往上勾。'),
+];
+EX.push(
+ E('bandPress','彈力繩胸推','Band Chest Press','hpush','複合',['chest'],['frontDelt','triceps'],'彈力繩繞過背後或固定在身後，像臥推一樣往前推直。'),
+ E('benchDips','椅子撐體','Bench Dips','hpush','複合',['triceps'],['chest','frontDelt'],'雙手撐在穩固的椅子邊緣，手肘往後彎，身體貼近椅子。'),
+ E('bandOhp','彈力繩肩推','Band Shoulder Press','vpush','複合',['frontDelt','sideDelt'],['triceps','upperTraps'],'腳踩住彈力繩，從肩膀往頭上推直，腹部收緊。'),
+ E('chinup','反手引體向上','Chin-up','vpull','複合',['lats','biceps'],['midBack','forearm'],'掌心朝自己，把下巴拉過單槓。比正手引體向上容易一點。'),
+ E('bandPulldown','彈力繩下拉','Band Lat Pulldown','vpull','複合',['lats'],['biceps','midBack'],'彈力繩固定在高處（例如門的上方），手肘往下、往口袋方向拉。'),
+ E('invertedRow','反向划船','Inverted Row','hpull','複合',['midBack','lats'],['biceps','rearDelt','abs'],'身體在低槓下面打直，把胸口拉向槓。在家可以用很穩固的桌子。'),
+ E('bandRow','彈力繩划船','Band Row','hpull','複合',['midBack','lats'],['rearDelt','biceps'],'彈力繩固定在前方（例如門把），往肚子拉，最後夾緊肩胛骨。'),
+ E('bandSquat','彈力繩深蹲','Band Squat','squat','複合',['quads','glutes'],['adductors','abs'],'雙腳踩住彈力繩、繩掛在肩上，像一般深蹲一樣蹲下站起。'),
+ E('bwSquat','徒手深蹲','Bodyweight Squat','squat','複合',['quads','glutes'],['adductors'],'雙手往前平舉幫助平衡，慢慢蹲下，再用力站起。'),
+ E('bandGoodMorning','彈力繩早安式','Band Good Morning','hinge','複合',['hamstrings','glutes'],['erectors'],'腳踩彈力繩、繩掛在脖子後方，背打直把屁股往後推，再站直。'),
+ E('gluteBridge','臀橋','Glute Bridge','hinge','複合',['glutes'],['hamstrings'],'躺著屈膝，腳跟推地把屁股抬高，頂端夾臀停一秒。膝蓋上方套彈力繩會更難。'),
+ E('superman','超人式','Superman','core','孤立',['erectors'],['glutes'],'趴在地上，手和腳同時抬離地面，停 2 秒再放下。'),
+ E('deadBug','死蟲式','Dead Bug','core','孤立',['abs'],['obliques'],'躺著手腳朝上，對側的手和腳慢慢放低，下背一直貼地。'),
+ E('reverseCrunch','反向捲腹','Reverse Crunch','core','孤立',['abs'],['obliques'],'躺著屈膝，用腹部把骨盆往胸口捲起，不要用甩的。'),
+ E('bandFly','彈力繩夾胸','Band Chest Fly','iso','孤立',['chest'],['upperChest','frontDelt'],'彈力繩固定在身後，手肘微彎，雙手往前合起，慢慢回到起點。'),
+ E('bandLatRaise','彈力繩側平舉','Band Lateral Raise','iso','孤立',['sideDelt'],['upperTraps'],'腳踩住彈力繩，手肘微彎往兩旁舉到肩膀高度。'),
+ E('bandPullApart','彈力繩拉開','Band Pull-Apart','iso','孤立',['rearDelt','midBack'],['upperTraps'],'雙手握繩在胸前，往兩邊拉開直到碰到胸口，夾緊肩胛骨。'),
+ E('bandCurl','彈力繩彎舉','Band Curl','iso','孤立',['biceps'],['forearm'],'腳踩住彈力繩，手肘固定在身體旁邊往上彎。'),
+ E('bandTriExt','彈力繩三頭伸展','Band Triceps Extension','iso','孤立',['triceps'],[],'手肘朝前上方固定不動，只動前臂把繩推直。'),
+ E('bandKickback','彈力繩後踢','Band Kickback','iso','孤立',['glutes'],['hamstrings'],'彈力繩套在腳踝並固定在前方，腿往後踢，上身保持不動。'),
+ E('monsterWalk','彈力繩怪獸走','Monster Walk','iso','孤立',['gluteMed'],['glutes'],'彈力繩套在膝蓋上方或腳踝，保持半蹲往側邊走。'),
+ E('bandCalf','彈力繩提踵','Band Calf Raise','iso','孤立',['calves'],[],'坐著把彈力繩套在腳掌前端，腳尖往前踩到底。'),
+);
+const EQN={barbell:'槓鈴',dumbbell:'啞鈴',machine:'健身房器械',band:'彈力繩／阻力繩',bar:'單槓／雙槓',none:'徒手'};
+const EQ={bench:'barbell',incline:'dumbbell',pushup:'none',dips:'bar',ohp:'barbell',pullup:'bar',pulldown:'machine',row:'barbell',seatedRow:'machine',
+ squat:'barbell',frontSquat:'barbell',legPress:'machine',deadlift:'barbell',rdl:'barbell dumbbell',hipThrust:'barbell',bss:'dumbbell none',lunge:'dumbbell none',stepUp:'dumbbell none',
+ plank:'none',hangingLeg:'bar',abWheel:'machine',pallof:'machine band',sidePlank:'none',farmer:'dumbbell',suitcase:'dumbbell',fly:'machine',latRaise:'dumbbell',
+ facePull:'machine band',revFly:'dumbbell',shrug:'dumbbell barbell',pushdown:'machine band',ohExt:'machine',curl:'dumbbell',hammer:'dumbbell',legExt:'machine',legCurl:'machine',
+ backExt:'machine',abduction:'machine',adduction:'machine',calfRaise:'none machine',tibRaise:'none',
+ bandPress:'band',benchDips:'none',bandOhp:'band',chinup:'bar',bandPulldown:'band',invertedRow:'bar',bandRow:'band',bandSquat:'band',bwSquat:'none',bandGoodMorning:'band',
+ gluteBridge:'none',superman:'none',deadBug:'none',reverseCrunch:'none',bandFly:'band',bandLatRaise:'band',bandPullApart:'band',bandCurl:'band',bandTriExt:'band',
+ bandKickback:'band',monsterWalk:'band',bandCalf:'band'};
+EX.forEach(e=>e.eq=(EQ[e.id]||'none').split(' '));
+const EQKEY='muscle-map-equipment';
+let EQS=new Set(['barbell','dumbbell','machine','band','bar']);
+try{const v=JSON.parse(localStorage.getItem(EQKEY)||'null'); if(Array.isArray(v)) EQS=new Set(v);}catch(e){}
+const saveEq=()=>{try{localStorage.setItem(EQKEY,JSON.stringify([...EQS]));}catch(e){}};
+const avail=e=>e.eq.some(q=>q==='none'||EQS.has(q));
+const eqText=e=>e.eq.map(q=>EQN[q]).join(' 或 ');
+const EQPRESETS=[['gym','健身房（全部）',['barbell','dumbbell','machine','band','bar']],['homeBand','在家：只有阻力繩',['band']],['homeDb','在家：啞鈴＋阻力繩',['dumbbell','band']],['bw','只有徒手',[]]];
+const EXM=Object.fromEntries(EX.map(e=>[e.id,e]));
+
+// ---------- Rendering ----------
+const $=s=>document.querySelector(s);
+function figure(view){
+  const parts=(view==='front'?FRONT:BACK).map(([id,d])=>`<path class="m" data-m="${id}" d="${d}"/>`).join('');
+  const det=(view==='front'?FRONT_D:BACK_D).map(d=>`<path d="${d}"/>`).join('');
+  return `<g class="sil"><path d="${SIL}"/><path d="${SIL}" transform="${MIRROR}"/><ellipse cx="100" cy="33" rx="16" ry="21"/></g>`+
+    `<g class="half r">${parts}</g><g class="half l" transform="${MIRROR}">${parts}</g>`+
+    `<g class="fib">${det}</g><g class="fib" transform="${MIRROR}">${det}</g>`;
+}
+const figF=$('#fig-front'), figB=$('#fig-back');
+figF.innerHTML=figure('front'); figB.innerHTML=figure('back');
+
+// Bounding boxes of each muscle (right half) per view
+const BB={front:{},back:{}};
+for(const [view,svg] of [['front',figF],['back',figB]]){
+  svg.querySelectorAll('.half.r .m').forEach(p=>{
+    const b=p.getBBox(), id=p.dataset.m, o=BB[view][id];
+    if(!o) BB[view][id]={x:b.x,y:b.y,x2:b.x+b.width,y2:b.y+b.height};
+    else {o.x=Math.min(o.x,b.x);o.y=Math.min(o.y,b.y);o.x2=Math.max(o.x2,b.x+b.width);o.y2=Math.max(o.y2,b.y+b.height);}
+  });
+}
+
+let S={tab:'muscle',mode:'muscle',muscle:'chest',ex:null,pat:'hpush'};
+
+function highlight(root,P,Sx){
+  root.classList.toggle('has-sel',P.size>0);
+  root.querySelectorAll('.m').forEach(p=>{
+    const id=p.dataset.m;
+    p.classList.toggle('is-p',P.has(id));
+    p.classList.toggle('is-s',!P.has(id)&&Sx.has(id));
+  });
+}
+
+let ZOOM=null;            // null = auto-fit to the selected muscle
+let LP=null;              // current loupe state
+const ZMIN=0.8, ZMAX=6;
+function loupe(focus,P,Sx){
+  const view=M[focus].view;
+  const b=BB[view][focus]||BB[view==='front'?'back':'front'][focus];
+  let x1=b.x,x2=b.x2;
+  if(b.x<114){x1=Math.min(x1,200-b.x2);}           // near the midline: show both sides
+  const A=1.25, pad=16;
+  let w=x2-x1+pad*2, h=b.y2-b.y+pad*2;
+  if(h<64)h=64;
+  if(w<h*A) w=h*A;
+  const cx=(x1+x2)/2, cy=(b.y+b.y2)/2;
+  LP={focus,view,P,Sx,cx,cy,cx0:cx,cy0:cy,auto:Math.min(ZMAX,Math.max(ZMIN,200/w))};
+  return `<div class="loupe" id="loupe"><svg id="loupe-svg" viewBox="0 0 200 160" role="img" aria-label="${M[focus].zh}放大圖">${figure(view)}<g class="lbls"></g></svg>`+
+    `<span class="mag" id="mag"></span><span class="viewtag">${view==='front'?'Anterior 正面':'Posterior 背面'}</span><i class="corner c1"></i><i class="corner c2"></i></div>`+
+    `<div class="zoom" role="group" aria-label="放大倍數">
+      <button type="button" data-zoom="-1" aria-label="縮小">−</button>
+      <input type="range" id="zoom-range" min="${ZMIN}" max="${ZMAX}" step="0.1" aria-label="放大倍數">
+      <button type="button" data-zoom="1" aria-label="放大">+</button>
+      <button type="button" data-zoom="auto" id="zoom-auto" class="auto">自動</button>
+    </div><p class="zhint">拖曳放大圖可以移動位置</p>`;
+}
+function applyZoom(){
+  const svg=$('#loupe-svg'); if(!svg||!LP) return;
+  const mag=ZOOM??LP.auto, w=200/mag, h=w/1.25;
+  LP.cx=Math.max(w/2-10,Math.min(210-w/2,LP.cx));
+  LP.cy=Math.max(h/2-10,Math.min(450-h/2,LP.cy));
+  const vb={x:LP.cx-w/2,y:LP.cy-h/2,w,h};
+  svg.setAttribute('viewBox',`${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)}`);
+  $('#mag').textContent=`放大 ×${mag.toFixed(1)}`;
+  $('#zoom-range').value=mag;
+  $('#zoom-auto').setAttribute('aria-pressed',String(ZOOM===null&&LP.cx===LP.cx0&&LP.cy===LP.cy0));
+  layoutLabels(svg,vb);
+}
+function layoutLabels(svg,vb){
+  const NS='http://www.w3.org/2000/svg', g=svg.querySelector('.lbls');
+  g.innerHTML='';
+  const {view,P,focus}=LP, fs=vb.w*0.042, m=fs*0.22;
+  const items=[];
+  for(const id in BB[view]){
+    const o=BB[view][id], ax=(o.x+o.x2)/2, ay=(o.y+o.y2)/2;
+    if(ax<vb.x||ax>vb.x+vb.w||ay<vb.y||ay>vb.y+vb.h) continue;
+    items.push({id,ax,ay,on:P.has(id)||id===focus});
+  }
+  items.sort((a,b)=>(b.on-a.on)||(a.ay-b.ay));     // highlighted muscles get the best spots
+  const placed=[];
+  const hit=r=>placed.some(p=>!(r.x2<p.x||r.x>p.x2||r.y2<p.y||r.y>p.y2));
+  for(const it of items){
+    const size=it.on?fs*1.12:fs;
+    const t=document.createElementNS(NS,'text');
+    t.setAttribute('class','lbl'+(it.on?' on':''));
+    t.setAttribute('font-size',size.toFixed(2));
+    t.setAttribute('stroke-width',(size*0.28).toFixed(2));
+    t.textContent=M[it.id].zh.replace(/（.*）/,'');
+    t.setAttribute('x',it.ax); t.setAttribute('y',it.ay);
+    g.appendChild(t);
+    const bb=t.getBBox(), tw=bb.width, th=size*1.15;
+    const cand=[[0,0]];
+    for(let k=1;k<=5;k++){cand.push([0,k*th],[0,-k*th]);}
+    for(let k=1;k<=3;k++){cand.push([k*tw*0.6,0],[-k*tw*0.6,0]);}
+    let done=false;
+    for(const [dx,dy] of cand){
+      const x=Math.max(vb.x+tw/2+m,Math.min(vb.x+vb.w-tw/2-m,it.ax+dx));
+      const y=Math.max(vb.y+th/2+m+fs*1.3,Math.min(vb.y+vb.h-th/2-m,it.ay+dy));
+      const r={x:x-tw/2-m,y:y-th/2-m,x2:x+tw/2+m,y2:y+th/2+m};
+      if(hit(r)) continue;
+      t.setAttribute('x',x.toFixed(2)); t.setAttribute('y',y.toFixed(2));
+      placed.push(r);
+      if(Math.hypot(x-it.ax,y-it.ay)>th*0.7){     // moved away: draw a leader line to the muscle
+        const ey=y+(it.ay>y?th/2:-th/2)*0.85;
+        const ln=document.createElementNS(NS,'path');
+        ln.setAttribute('class','lead'+(it.on?' on':''));
+        ln.setAttribute('d',`M${it.ax.toFixed(2)},${it.ay.toFixed(2)} L${x.toFixed(2)},${ey.toFixed(2)}`);
+        ln.setAttribute('stroke-width',(fs*0.07).toFixed(2));
+        const dot=document.createElementNS(NS,'circle');
+        dot.setAttribute('class','leaddot'+(it.on?' on':''));
+        dot.setAttribute('cx',it.ax.toFixed(2)); dot.setAttribute('cy',it.ay.toFixed(2)); dot.setAttribute('r',(fs*0.16).toFixed(2));
+        g.insertBefore(dot,g.firstChild); g.insertBefore(ln,g.firstChild);
+      }
+      done=true; break;
+    }
+    if(!done) t.remove();                         // no free spot: leave it out rather than overlap
+  }
+}
+
+const NOIMG=new Set();
+const hasImg=id=>!NOIMG.has(id);
+const src=(id,i)=>`img/${id}-${i}.jpg`;
+// One demo video per exercise. EMBED is true only in the self-hosted (GitHub Pages / Netlify) copy,
+// because claude.ai pages are not allowed to embed other sites.
+const EMBED=true;
+const VIDEO={"bench": "gRVjAtPip0Y", "incline": "OC7Qs_SAO2E", "pushup": "i9sTjhN4Z3M", "dips": "nyymAfre3s0", "ohp": "bMksDb5a3P0", "pullup": "TMnxKjdYcME", "pulldown": "CAwf7n6Luuc", "row": "ZtTwgJTBjOQ", "seatedRow": "f_r95UajQcg", "squat": "-bJIpOq-LWk", "frontSquat": "wyDbagKS7Rg", "legPress": "tg-jOYwhI5w", "deadlift": "cclUh49qOww", "rdl": "_oyxCn2iSjU", "hipThrust": "aweBS7K71l8", "bss": "VPhhE6bBzZE", "lunge": "WzONHuAe6BY", "stepUp": "9ZknEYboBOQ", "plank": "mwlp75MS6Rg", "hangingLeg": "-LHetdLNhjI", "abWheel": "NbudTqiwguk", "pallof": "Te5VAYXy0wQ", "sidePlank": "Np5FR3qN3Gg", "farmer": "Fkzk_RqlYig", "suitcase": "y-hn_Ha1-RE", "fly": "taI4XduLpTk", "latRaise": "ssAo_xwFt5c", "facePull": "eTCBSFlCJ_s", "revFly": "rQhdsa5QdVU", "shrug": "xiLT85G_GuU", "pushdown": "d-ySLTHUgQA", "ohExt": "AUsSlsBu5eg", "curl": "93R8V6uvwHc", "hammer": "4BRAf2BajWw", "legExt": "Cy9TJ_jhEBs", "legCurl": "NlZeAGZ_YJw", "backExt": "JzovzOGudfc", "abduction": "5O_Y9l__iao", "adduction": "fpVHoidfg60", "calfRaise": "ndQc4mz4mBU", "tibRaise": "dnxy5DhY0Ks", "bandPress": "POx0bVn823Q", "benchDips": "e5Gyc1D_BxM", "bandOhp": "OrQ9J1Us3V8", "chinup": "53kV7Ou7oZo", "bandPulldown": "o5bXFrdw5iI", "invertedRow": "sHeLHRd_nCs", "bandRow": "LSkyinhmA8k", "bandSquat": "duP-UZsfOaQ", "bwSquat": "DlS-GAF8Edg", "bandGoodMorning": "1Yp1unFJILY", "gluteBridge": "wPM8icPu6H8", "superman": "z6PJMT2y8GQ", "deadBug": "bxn9FBrt4-A", "reverseCrunch": "XY8KzdDcMFg", "bandFly": "UpyX0O740Gg", "bandLatRaise": "gfEyrmxbCbw", "bandPullApart": "Zxp9IORjjK4", "bandCurl": "RyWX9e7imhc", "bandTriExt": "MwQOKIVMEBM", "bandKickback": "pdP0uJXvc44", "monsterWalk": "4p6gxxLVX0c", "bandCalf": "8IsONLAyjD8"};
+const ytUrl=e=>VIDEO[e.id]?'https://www.youtube.com/watch?v='+VIDEO[e.id]:'https://www.youtube.com/results?search_query='+encodeURIComponent(e.en+' exercise proper form');
+const ytSearch=e=>'https://www.youtube.com/results?search_query='+encodeURIComponent(e.en+' exercise proper form');
+let VT=false;   // video tab selected in the popup
+const reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+const PLAY={on:!reduce,frame:0,timer:null};
+function showFrame(i){
+  PLAY.frame=i;
+  const st=document.querySelector('.stage'); if(!st) return;
+  st.querySelectorAll('img').forEach((im,k)=>im.classList.toggle('on',k===i));
+  st.querySelector('.badge').textContent=`姿勢 ${i+1} / 2`;
+  document.querySelectorAll('[data-frame]').forEach(b=>b.setAttribute('aria-pressed',String(!PLAY.on&&+b.dataset.frame===i)));
+}
+function syncPlay(){
+  clearInterval(PLAY.timer); PLAY.timer=null;
+  const st=document.querySelector('.stage'); if(!st) return;
+  const pb=document.querySelector('[data-play]');
+  if(pb){pb.textContent=PLAY.on?'❚❚ 暫停':'▶ 播放';pb.setAttribute('aria-pressed',String(PLAY.on));}
+  st.querySelector('.live').classList.toggle('paused',!PLAY.on);
+  st.querySelector('.live span').textContent=PLAY.on?'播放中':'已暫停';
+  if(PLAY.on) PLAY.timer=setInterval(()=>showFrame(PLAY.frame?0:1),1100);
+  showFrame(PLAY.frame);
+}
+function demo(e){
+  const vid=EMBED&&VIDEO[e.id];
+  const tabs=vid?`<div class="seg vtabs" role="group" aria-label="示範方式"><button type="button" data-vtab="img" aria-pressed="${!VT}">示範圖</button><button type="button" data-vtab="yt" aria-pressed="${VT}">YouTube 影片</button></div>`:'';
+  if(vid&&VT) return `${tabs}<div class="ytbox"><iframe src="https://www.youtube-nocookie.com/embed/${vid}?rel=0&playsinline=1" title="${e.zh} 示範影片" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="ctrl"><span class="vnote">影片無法播放時，可以直接到 YouTube 看</span><a href="${ytUrl(e)}" target="_blank" rel="noopener">在 YouTube 開啟 ↗</a></div>`;
+  return tabs+demoImg(e);
+}
+function demoImg(e){
+  if(!hasImg(e.id)) return `<div class="noimg"><div>這個動作暫時沒有示範照片<br><a class="yt" style="margin:6px 0 0;display:inline-block" href="${ytUrl(e)}" target="_blank" rel="noopener">在 YouTube 看示範影片 ↗</a></div></div>`;
+  return `<figure class="demo"><div class="stage">
+    <img src="${src(e.id,0)}" alt="${e.zh} 姿勢 1" class="on"><img src="${src(e.id,1)}" alt="${e.zh} 姿勢 2">
+    <span class="badge">姿勢 1 / 2</span><span class="live"><i></i><span>播放中</span></span></div>
+    <div class="ctrl"><button type="button" data-play="1">❚❚ 暫停</button><button type="button" data-frame="0" aria-pressed="false">姿勢 1</button><button type="button" data-frame="1" aria-pressed="false">姿勢 2</button>
+    <a href="${ytUrl(e)}" target="_blank" rel="noopener">YouTube 示範影片 ↗</a><a class="more" href="${ytSearch(e)}" target="_blank" rel="noopener">搜尋更多</a></div></figure>`;
+}
+
+function exItem(e){
+  const th=hasImg(e.id)?`<img class="th" src="${src(e.id,0)}" alt="" loading="lazy">`:`<span class="th"></span>`;
+  const ok=avail(e);
+  return `<button type="button" class="ex${ok?'':' na'}" data-ex="${e.id}">${th}<span class="n">${e.zh}<small>${e.en} · ${eqText(e)}</small></span><span class="tag${!ok?' miss':e.type==='複合'?' c':''}">${ok?e.type:'缺器材'}</span></button>`;
+}
+const sortEx=a=>a.sort((x,y)=>(avail(y)-avail(x))||(x.type===y.type?0:x.type==='複合'?-1:1));
+
+function renderChips(){
+  const box=$('#chips');
+  if(S.tab==='muscle'){
+    box.innerHTML=GROUPS.map(([zh,en,ids])=>`<div class="cgroup"><h3>${zh} · ${en}</h3><div class="crow">${
+      ids.map(id=>`<button type="button" class="chip" data-muscle="${id}" aria-pressed="${S.mode==='muscle'&&S.muscle===id}">${M[id].zh.replace(/（.*）/,'')}</button>`).join('')}</div></div>`).join('');
+  } else {
+    box.innerHTML=`<div class="cgroup"><h3>動作模式 · Movement Patterns</h3><div class="crow">${
+      Object.keys(PAT).map(k=>`<button type="button" class="chip" data-pat="${k}" aria-pressed="${S.mode==='pattern'&&S.pat===k}">${PAT[k][0]}</button>`).join('')}</div></div>`;
+  }
+  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===S.tab));
+}
+
+function render(){
+  let P=new Set(),Sx=new Set(),focus,html='';
+  const d=$('#detail');
+  if(S.mode==='muscle'){
+    const id=S.muscle,m=M[id]; P.add(id); focus=id;
+    const i=ORDER.indexOf(id);
+    const prim=sortEx(EX.filter(e=>e.p.includes(id))), sec=sortEx(EX.filter(e=>e.s.includes(id)));
+    html=`<div class="dhead"><div><div class="eyebrow">${GROUPS.find(g=>g[2].includes(id))[0]}</div><h2>${m.zh}</h2><div class="en">${m.en}</div></div>
+      <div><div class="stepper"><button type="button" id="prev" aria-label="上一個肌群">‹</button><button type="button" id="next" aria-label="下一個肌群">›</button></div><div class="count">${String(i+1).padStart(2,'0')} / ${ORDER.length}</div></div></div>
+      <div class="dcols"><div class="dcol">${loupe(focus,P,Sx)}
+      <p class="fn">${m.fn}</p><p class="tip">${m.tip}</p></div><div class="dcol">
+      <div class="sec"><h3><i class="dot p" style="width:9px;height:9px;border-radius:50%;display:inline-block"></i>主要訓練動作</h3><div class="exlist">${prim.map(exItem).join('')||'<p class="empty">沒有專門動作</p>'}</div></div>
+      ${sec.length?`<div class="sec"><h3><i class="dot s" style="width:9px;height:9px;border-radius:50%;display:inline-block"></i>也會練到它的動作</h3><div class="exlist">${sec.map(exItem).join('')}</div></div>`:''}</div></div>
+      <button type="button" class="back toplink" data-top="1">↑ 回到全身圖</button>`;
+  } else if(S.mode==='exercise'){
+    const e=EXM[S.ex]; e.p.forEach(x=>P.add(x)); e.s.forEach(x=>Sx.add(x)); focus=e.p[0];
+    const chip=(id,c)=>`<button type="button" class="chip" data-muscle="${id}"><i class="dot ${c}"></i>${M[id].zh.replace(/（.*）/,'')}</button>`;
+    html=`${DLG.open?'':`<button type="button" class="back" data-back="1">‹ 回到${S.tab==='pattern'?PAT[S.pat][0]:M[S.muscle].zh.replace(/（.*）/,'')}</button>`}
+      <div class="dhead"><div><div class="eyebrow">${PAT[e.pat][0]} · ${e.type}動作</div><h2>${e.zh}</h2><div class="en"><span class="entext">${e.en}</span><button type="button" class="copy" data-copy="${e.en}">複製英文</button></div></div></div>
+      <div class="eqline"><span>需要器材</span>${e.eq.map(q=>`<b class="eqtag${q==='none'||EQS.has(q)?'':' off'}">${EQN[q]}</b>`).join('<em>或</em>')}</div>
+      <div class="dcols"><div class="dcol">${avail(e)?'':(()=>{const alt=sortEx(EX.filter(x=>x.id!==e.id&&avail(x)&&x.p.some(m=>e.p.includes(m)))).slice(0,4);
+        return `<div class="altbox"><p>你選的器材做不到這個動作。${alt.length?'可以改做這些練到相同肌群的動作：':'目前器材沒有可以替代的動作。'}</p>${alt.length?`<div class="exlist">${alt.map(exItem).join('')}</div>`:''}</div>`;})()}
+      ${demo(e)}
+      <p class="tip">${e.cue}</p></div><div class="dcol">
+      ${loupe(focus,P,Sx)}
+      <div class="sec"><h3>主要肌群</h3><div class="crow">${e.p.map(x=>chip(x,'p')).join('')}</div></div>
+      ${e.s.length?`<div class="sec"><h3>輔助肌群</h3><div class="crow">${e.s.map(x=>chip(x,'s')).join('')}</div></div>`:''}</div></div>
+      <button type="button" class="back toplink" data-top="1">↑ 回到全身圖</button>`;
+  } else {
+    const k=S.pat, list=sortEx(EX.filter(e=>e.pat===k));
+    list.forEach(e=>e.p.forEach(x=>P.add(x)));
+    list.forEach(e=>e.s.forEach(x=>{if(!P.has(x))Sx.add(x)}));
+    focus=list[0].p[0];
+    html=`<div class="dhead"><div><div class="eyebrow">動作模式</div><h2>${PAT[k][0]}</h2></div></div>
+      ${loupe(focus,P,Sx)}
+      <p class="fn">${PAT[k][1]}</p>
+      <div class="sec"><h3>這類動作（點一下看練到哪裡）</h3><div class="exlist">${list.map(exItem).join('')}</div></div>
+      <button type="button" class="back toplink" data-top="1">↑ 回到全身圖</button>`;
+  }
+  d.innerHTML=html;
+  d.scrollTop=0;
+  PLAY.frame=0; syncPlay();
+  highlight(figF,P,Sx); highlight(figB,P,Sx); highlight($('#loupe-svg'),P,Sx);
+  applyZoom();
+  renderChips();
+}
+
+// ---------- Workout builder ----------
+const AREAS={
+ chest:{zh:'胸',en:'Chest',m:['upperChest','chest'],ex:['bench','incline','dips','pushup','fly','bandPress','bandFly']},
+ back:{zh:'背',en:'Back',m:['lats','midBack','upperTraps','erectors'],ex:['pullup','row','pulldown','seatedRow','chinup','invertedRow','bandRow','bandPulldown','bandPullApart','shrug','backExt','superman']},
+ shoulders:{zh:'肩膀',en:'Shoulders',m:['frontDelt','sideDelt','rearDelt'],ex:['ohp','latRaise','facePull','revFly','bandOhp','bandLatRaise','bandPullApart']},
+ arms:{zh:'手臂',en:'Arms',m:['biceps','triceps','forearm'],ex:['curl','pushdown','hammer','ohExt','bandCurl','bandTriExt','benchDips']},
+ legs:{zh:'腿',en:'Legs',m:['quads','hamstrings','adductors','calves'],ex:['squat','rdl','legPress','bandSquat','bandGoodMorning','bss','legCurl','legExt','lunge','bwSquat','calfRaise','bandCalf']},
+ glutes:{zh:'臀',en:'Glutes',m:['glutes','gluteMed'],ex:['hipThrust','rdl','bss','stepUp','abduction','gluteBridge','bandKickback','monsterWalk']},
+ core:{zh:'核心',en:'Core',m:['abs','obliques'],ex:['plank','hangingLeg','pallof','sidePlank','abWheel','farmer','deadBug','reverseCrunch']},
+};
+const TIMES=[[30,'30 分鐘',4],[45,'45 分鐘',6],[60,'60 分鐘',8]];
+const PS={areas:new Set(['chest','back']),time:45};
+
+function buildPlan(){
+  const areas=[...PS.areas]; const n=TIMES.find(t=>t[0]===PS.time)[2];
+  const picked=[], ptr=Object.fromEntries(areas.map(a=>[a,0])), from={};
+  let guard=0;
+  while(picked.length<n && guard++<200){
+    let added=false;
+    for(const a of areas){
+      if(picked.length>=n) break;
+      const list=AREAS[a].ex.filter(id=>avail(EXM[id]));
+      while(ptr[a]<list.length && picked.includes(list[ptr[a]])) ptr[a]++;
+      if(ptr[a]<list.length){picked.push(list[ptr[a]]);from[list[ptr[a]]]=a;ptr[a]++;added=true;}
+    }
+    if(!added) break;
+  }
+  // compound lifts first, then isolation; keep the area rotation inside each group
+  const ex=picked.map(id=>EXM[id]);
+  const ordered=[...ex.filter(e=>e.type==='複合'),...ex.filter(e=>e.type!=='複合')];
+  return ordered.map((e,i)=>{
+    const comp=e.type==='複合', core=['core','carry'].includes(e.pat);
+    const sets=comp&&i<2&&!core?4:3;
+    const light=!e.eq.some(q=>['barbell','dumbbell','machine'].includes(q)&&EQS.has(q))&&!['pullup','chinup','dips','invertedRow'].includes(e.id);
+    const reps=core?(e.id==='plank'||e.id==='sidePlank'?'30–45 秒':e.id==='farmer'?'30–40 公尺':'10–15 下'):light?'12–20 下':comp?'6–10 下':'10–15 下';
+    const rest=comp&&!core&&!light?'休息 2–3 分':'休息 60–90 秒';
+    return {e,sets,reps,rest,area:from[e.id]};
+  });
+}
+
+const EQOPEN=new Set();
+function renderEqBars(){
+  const presets=EQPRESETS.map(([k,l,set])=>{const on=set.length===EQS.size&&set.every(q=>EQS.has(q));
+    return `<button type="button" class="chip" data-eqp="${k}" aria-pressed="${on}">${l}</button>`;}).join('');
+  const chips=['barbell','dumbbell','machine','band','bar'].map(q=>`<button type="button" class="eqchip" data-eq="${q}" aria-pressed="${EQS.has(q)}"><i></i>${EQN[q]}</button>`).join('')+
+    '<span class="eqchip fixed"><i></i>徒手（一定包含）</span>';
+  const now=[...['barbell','dumbbell','machine','band','bar'].filter(q=>EQS.has(q)).map(q=>EQN[q]),'徒手'].join('、');
+  document.querySelectorAll('[data-eqbar]').forEach(bar=>{
+    const k=bar.dataset.eqbar;
+    bar.innerHTML=`<div class="eqtop"><span class="eqlab">我的器材</span><div class="crow" role="group" aria-label="快速選擇器材">${presets}</div></div>
+      <details class="eqmore" data-eqkey="${k}" ${EQOPEN.has(k)?'open':''}><summary>自訂器材<span>目前：${now}</span></summary><div class="crow" role="group" aria-label="勾選我有的器材">${chips}</div></details>`;
+  });
+}
+function renderPlan(){
+  $('#areas').innerHTML=Object.entries(AREAS).map(([k,a])=>
+    `<button type="button" class="area" data-area="${k}" aria-pressed="${PS.areas.has(k)}">${a.zh}<small>${a.en}</small></button>`).join('');
+  $('#times').innerHTML=TIMES.map(([t,l])=>`<button type="button" data-time="${t}" aria-pressed="${PS.time===t}">${l}</button>`).join('');
+  renderEqBars();
+  const out=$('#planout');
+  if(!PS.areas.size){out.innerHTML='<div class="pempty">先在上面選一個或多個想練的部位，例如「胸」和「背」。</div>';return;}
+
+  const plan=buildPlan();
+  const target=new Set([...PS.areas].flatMap(a=>AREAS[a].m));
+  const helped=new Set();
+  plan.forEach(({e})=>[...e.p,...e.s].forEach(x=>{if(!target.has(x))helped.add(x)}));
+  const nm=id=>M[id].zh.replace(/（.*）/,'');
+  const totalSets=plan.reduce((s,r)=>s+r.sets,0);
+  const minutes=Math.round((totalSets*2.3+6)/5)*5;
+  const tooMany=PS.areas.size>TIMES.find(t=>t[0]===PS.time)[2]/2;
+
+  const covered=new Set(plan.map(r=>r.area));
+  const missing=[...PS.areas].filter(a=>!AREAS[a].ex.some(id=>avail(EXM[id])));
+  const groups=[...PS.areas].map(a=>`<div class="mg"><span class="an">${AREAS[a].zh}</span><span class="crow">${
+    AREAS[a].m.map(id=>`<button type="button" class="chip" data-muscle="${id}"><i class="dot p"></i>${nm(id)}</button>`).join('')}</span></div>`).join('');
+  const helpChips=[...helped].map(id=>`<button type="button" class="chip" data-muscle="${id}"><i class="dot s"></i>${nm(id)}</button>`).join('');
+
+  const rows=plan.map((r,i)=>{
+    const th=hasImg(r.e.id)?`<img class="th" src="${src(r.e.id,0)}" alt="" loading="lazy">`:'<span class="th"></span>';
+    return `<button type="button" class="prow" data-ex="${r.e.id}"><span class="no">${String(i+1).padStart(2,'0')}</span>${th}
+      <span class="nm"><b>${r.e.zh}<span class="enm">${r.e.en}</span></b><small>${AREAS[r.area].zh} · ${r.e.p.map(nm).join('、')}</small></span>
+      <span class="dose">${r.sets} × ${r.reps}<small>${r.rest}</small></span></button>`;
+  }).join('');
+
+  out.innerHTML=`<div class="pbody">
+    <div class="pfigs"><div><svg id="plan-front" viewBox="0 0 200 440" role="img" aria-label="目標肌群正面">${figure('front')}</svg><div class="figlabel">正面</div></div>
+      <div><svg id="plan-back" viewBox="0 0 200 440" role="img" aria-label="目標肌群背面">${figure('back')}</svg><div class="figlabel">背面</div></div></div>
+    <div class="pcol">
+      <div class="pblock"><h3>目標肌群<span>點肌肉看詳細說明</span></h3><div class="mgroups">${groups}</div></div>
+      ${helped.size?`<div class="pblock"><h3>這份課表也會練到<span>輔助肌群</span></h3><div class="crow">${helpChips}</div></div>`:''}
+      ${missing.length?`<p class="warn">目前的器材沒有適合練「${missing.map(a=>AREAS[a].zh).join('、')}」的動作，可以多選一種器材。</p>`:''}
+      ${tooMany?`<p class="warn">一次選了很多部位，每個部位只能分到 1 個動作。建議把部位分到不同天練，或選更長的時間。</p>`:''}
+      <div class="pblock"><h3>建議課表<span>由上往下做，點動作看示範</span></h3><div class="prows">${rows}</div></div>
+      <div class="psum"><span>動作 <b>${plan.length}</b></span><span>總組數 <b>${totalSets}</b></span><span>含暖身約 <b>${minutes}</b> 分鐘</span><span>重量：每組做到還剩 1–3 下的程度</span></div>
+    </div></div>`;
+  highlight($('#plan-front'),target,helped); highlight($('#plan-back'),target,helped);
+}
+
+// ---------- Specialization programs ----------
+const sl=(opts,sets,reps,note)=>({opts,sets,reps,note});
+const PROG={
+ shoulders:{zh:'寬肩計畫',en:'Wide Shoulders',
+  lead:'肩膀看起來寬，主要靠側三角肌（肩膀外側）和背闊肌（讓上半身成 V 字形）。側三角肌很難靠肩推練到，所以這個計畫每週有 8–10 組側平舉，並且放在訓練前段，趁還有體力時做。',
+  target:['sideDelt','rearDelt','lats'],
+  tips:['側平舉用輕重量，手肘微彎、帶著手肘往外舉，舉到肩膀高度就好。','不要聳肩。感覺到上斜方肌在出力時，就把重量減輕。','後三角肌讓肩膀從側面看起來更圓，也能改善圓肩。'],
+  days:{A:[sl(['ohp','bandOhp'],3,'6–10 下','先做大重量推舉'),
+           sl(['latRaise','bandLatRaise'],4,'12–20 下','慢慢放下 2–3 秒'),
+           sl(['pullup','pulldown','chinup','bandPulldown'],3,'6–12 下','背變寬，V 字形'),
+           sl(['facePull','bandPullApart'],3,'15–20 下','後三角與肩膀健康')],
+        B:[sl(['latRaise','bandLatRaise'],4,'15–20 下','今天第一個做'),
+           sl(['row','seatedRow','invertedRow','bandRow'],3,'8–12 下','手肘往後拉，夾肩胛骨'),
+           sl(['revFly','bandPullApart','facePull'],3,'15–20 下','後三角'),
+           sl(['ohp','bandOhp'],3,'10–12 下','較輕重量、較多下')]}},
+ arms:{zh:'塞滿袖口',en:'Arm Size',
+  lead:'上臂大約三分之二是三頭肌，所以想撐滿袖口要先練三頭。過頭三頭伸展能把三頭最長的那一頭拉長，是最重要的動作。錘式彎舉練到肱肌，會把二頭肌往外推，讓手臂更厚。最後加上側平舉，撐起袖口上緣。',
+  target:['triceps','biceps','sideDelt'],
+  tips:['手肘固定不動，不要甩身體借力。重量輕一點、動作做標準，效果更好。','三頭和二頭每週各做大約 12 組，分兩天練。','手臂要變粗，體重通常也要慢慢增加：每天每公斤體重吃 1.6–2 克蛋白質，熱量稍微多吃一點。','每個月量一次手臂圍（放鬆、量最粗的地方），比照鏡子更準確。'],
+  days:{A:[sl(['dips','benchDips'],3,'6–10 下','三頭大重量複合動作'),
+           sl(['ohExt','bandTriExt'],3,'10–15 下','手肘朝前上方，感覺拉長'),
+           sl(['curl','bandCurl'],3,'8–12 下','手肘固定在身體旁'),
+           sl(['hammer','bandCurl'],3,'10–12 下','掌心相對，練肱肌'),
+           sl(['latRaise','bandLatRaise'],3,'15–20 下','撐起袖口上緣')],
+        B:[sl(['chinup','pulldown','bandPulldown'],3,'6–10 下','反手握，二頭用力'),
+           sl(['pushdown','benchDips'],3,'10–15 下','手肘貼身體'),
+           sl(['ohExt','bandTriExt'],3,'12–15 下','慢慢放下'),
+           sl(['curl','bandCurl'],3,'10–15 下','頂端停一秒'),
+           sl(['hammer','bandCurl'],3,'10–12 下','慢慢放下 2–3 秒'),
+           sl(['latRaise','bandLatRaise'],3,'15–20 下','撐起袖口上緣')]}},
+};
+const WEEKS=[['第 1–2 週','熟悉動作',0,'每組留 2–3 下的力氣，專心感覺目標肌肉在出力。'],
+ ['第 3–4 週','增加組數',1,'每個動作多做 1 組，每組做到只剩 1–2 下。'],
+ ['第 5–6 週','衝刺',1,'每個動作最後一組做到力竭。每週試著多 1 下或加一點重量。'],
+ ['第 7 週','減量恢復',-1,'組數減半、重量不變，讓身體恢復。之後回到第 1 週，用比上一輪重一點的重量重新開始。']];
+const SP={prog:'shoulders',day:'A',week:0};
+const setsFor=n=>WEEKS[SP.week][2]<0?Math.ceil(n/2):n+WEEKS[SP.week][2];
+
+function renderProg(){
+  const pr=PROG[SP.prog], nm=id=>M[id].zh.replace(/（.*）/,'');
+  $('#progtabs').innerHTML=Object.entries(PROG).map(([k,p])=>`<button type="button" data-prog="${k}" aria-pressed="${SP.prog===k}">${p.zh}</button>`).join('');
+  // pick the first exercise the current equipment allows for each slot
+  const pick=s=>s.opts.map(id=>EXM[id]).find(avail)||null;
+  const target=new Set(pr.target), helped=new Set(), weekly={};
+  pr.target.forEach(m=>weekly[m]=0);
+  for(const d of ['A','B']) for(const s of pr.days[d]){
+    const e=pick(s); if(!e) continue;
+    e.p.forEach(m=>{ if(m in weekly) weekly[m]+=setsFor(s.sets); else helped.add(m); });
+    e.s.forEach(m=>{ if(!target.has(m)) helped.add(m); });
+  }
+  const wk=WEEKS[SP.week];
+  const rows=pr.days[SP.day].map((s,i)=>{
+    const e=pick(s);
+    if(!e) return `<div class="prow na"><span class="no">${String(i+1).padStart(2,'0')}</span><span class="th"></span><span class="nm"><b>${EXM[s.opts[0]].zh}<span class="enm">${EXM[s.opts[0]].en}</span></b><small>目前的器材做不到，可以在上面多選一種器材</small></span><span class="dose">—</span></div>`;
+    const th=hasImg(e.id)?`<img class="th" src="${src(e.id,0)}" alt="" loading="lazy">`:'<span class="th"></span>';
+    const swapped=e.id!==s.opts[0];
+    return `<button type="button" class="prow" data-ex="${e.id}"><span class="no">${String(i+1).padStart(2,'0')}</span>${th}
+      <span class="nm"><b>${e.zh}<span class="enm">${e.en}</span></b><small>${s.note}${swapped?` · 代替${EXM[s.opts[0]].zh}`:''}</small></span>
+      <span class="dose">${setsFor(s.sets)} × ${s.reps}<small>${wk[2]<0?'減量週':'休息 60–120 秒'}</small></span></button>`;
+  }).join('');
+  $('#progout').innerHTML=`<div class="pbody">
+    <div class="pfigs"><div><svg id="prog-front" viewBox="0 0 200 440" role="img" aria-label="目標肌群正面">${figure('front')}</svg><div class="figlabel">正面</div></div>
+      <div><svg id="prog-back" viewBox="0 0 200 440" role="img" aria-label="目標肌群背面">${figure('back')}</svg><div class="figlabel">背面</div></div></div>
+    <div class="pcol">
+      <p class="fn">${pr.lead}</p>
+      <div class="pblock"><h3>每週目標肌群組數<span>${wk[0]}</span></h3><div class="wkbars">${pr.target.map(m=>{
+        const v=weekly[m], pct=Math.min(100,v/16*100);
+        return `<button type="button" class="wkbar" data-muscle="${m}"><span class="wl">${nm(m)}</span><span class="wt"><i style="width:${pct}%"></i><em style="left:${10/16*100}%"></em></span><span class="wv">${v} 組</span></button>`;}).join('')}
+        </div><p class="wnote">每週 10–16 組（虛線右邊）是多數人增肌的有效範圍。</p></div>
+      <div class="pblock">
+        <h3>課表<span>每週練 2 次，A、B 兩天中間至少隔一天</span></h3>
+        <div class="seg daytabs" role="group" aria-label="選擇訓練日">${['A','B'].map(d=>`<button type="button" data-pday="${d}" aria-pressed="${SP.day===d}">${d} 日</button>`).join('')}</div>
+        <div class="prows" style="margin-top:10px">${rows}</div>
+      </div>
+      <div class="pblock"><h3>進度安排<span>一次一步，照週數往下</span></h3>
+        <div class="weeks">
+          <button type="button" class="wstep" data-wk="-1" aria-label="上一階段" ${SP.week===0?'disabled':''}>‹</button>
+          <div class="wlist">${WEEKS.map((w,i)=>`<button type="button" class="wbtn" data-week="${i}" aria-pressed="${SP.week===i}"><b>${w[0]}</b><span>${w[1]}</span></button>`).join('')}</div>
+          <button type="button" class="wstep" data-wk="1" aria-label="下一階段" ${SP.week===WEEKS.length-1?'disabled':''}>›</button>
+        </div>
+        <p class="tip" style="margin-top:10px">${wk[3]}</p></div>
+      <div class="pblock"><h3>重點提醒</h3><ul class="tips">${pr.tips.map(t=>`<li>${t}</li>`).join('')}</ul></div>
+    </div></div>`;
+  highlight($('#prog-front'),target,helped); highlight($('#prog-back'),target,helped);
+}
+
+// ---------- Shared helpers ----------
+const isLight=e=>!e.eq.some(q=>['barbell','dumbbell','machine'].includes(q)&&EQS.has(q))&&!['pullup','chinup','dips','invertedRow'].includes(e.id);
+function pickFrom(opts,used){
+  const ok=opts.map(id=>EXM[id]).filter(avail);
+  return ok.find(e=>!used.has(e.id))||ok[0]||null;
+}
+function prowHTML(i,e,dose,rest,sub){
+  const th=hasImg(e.id)?`<img class="th" src="${src(e.id,0)}" alt="" loading="lazy">`:'<span class="th"></span>';
+  return `<button type="button" class="prow" data-ex="${e.id}"><span class="no">${String(i+1).padStart(2,'0')}</span>${th}
+    <span class="nm"><b>${e.zh}<span class="enm">${e.en}</span></b><small>${sub}</small></span>
+    <span class="dose">${dose}<small>${rest}</small></span></button>`;
+}
+const AREA_OF={};
+Object.entries(AREAS).forEach(([a,v])=>v.m.forEach(m=>AREA_OF[m]=a));
+AREA_OF.tibialis='legs';
+
+// ---------- Weekly menu ----------
+const O={PH:['bench','incline','bandPress','pushup'],PI:['incline','bandPress','pushup'],PV:['ohp','bandOhp'],
+ VP:['pullup','pulldown','chinup','bandPulldown'],VP2:['pulldown','chinup','bandPulldown','pullup'],HP:['row','seatedRow','invertedRow','bandRow'],HP2:['seatedRow','bandRow','invertedRow','row'],
+ SQ:['squat','frontSquat','legPress','bandSquat','bwSquat'],LP:['legPress','bandSquat','bwSquat','squat'],DL:['deadlift','rdl','bandGoodMorning','gluteBridge'],RDL:['rdl','bandGoodMorning','gluteBridge'],
+ HT:['hipThrust','gluteBridge'],SL:['bss','lunge','stepUp'],LR:['latRaise','bandLatRaise'],RD:['facePull','revFly','bandPullApart'],
+ CU:['curl','bandCurl'],HM:['hammer','bandCurl'],TR:['pushdown','bandTriExt','ohExt','benchDips'],TO:['ohExt','bandTriExt','benchDips'],
+ HC:['legCurl','rdl','bandGoodMorning'],QE:['legExt','bandSquat','bwSquat'],CA:['calfRaise','bandCalf'],C1:['hangingLeg','abWheel','reverseCrunch','deadBug'],C2:['plank','pallof','sidePlank'],
+ FL:['fly','bandFly','pushup'],DP:['dips','benchDips','pushup']};
+const wx=(k,sets,reps)=>({opts:O[k],sets,reps});
+const DAYN=['一','二','三','四','五','六','日'];
+const SPLITS={
+ s3:{zh:'每週 3 天',sub:'全身訓練',lead:'每次都練全身，每個部位每週練 3 次。適合新手或時間比較少的人，兩次訓練中間休息一天。',
+  days:{0:{n:'全身 A',focus:'深蹲＋水平推拉',ex:[wx('SQ',3,'6–10'),wx('PH',3,'6–10'),wx('HP',3,'8–12'),wx('LR',3,'12–20'),wx('C2',3,'30–45 秒')]},
+        2:{n:'全身 B',focus:'硬舉＋垂直推拉',ex:[wx('RDL',3,'8–10'),wx('PV',3,'6–10'),wx('VP',3,'6–12'),wx('SL',3,'8–12'),wx('CU',2,'10–15'),wx('TR',2,'10–15')]},
+        4:{n:'全身 C',focus:'較輕重量、較多次數',ex:[wx('LP',3,'10–12'),wx('PI',3,'8–12'),wx('HP2',3,'10–12'),wx('HT',3,'8–12'),wx('RD',3,'15–20'),wx('C1',3,'10–15')]}}},
+ s4:{zh:'每週 4 天',sub:'上下半身分化',lead:'上半身和下半身輪流練，每個部位每週練 2 次。這是最多人用的排法，進步和恢復的平衡最好。',
+  days:{0:{n:'上半身 A',focus:'力量為主',ex:[wx('PH',4,'6–8'),wx('HP',4,'6–10'),wx('PV',3,'8–10'),wx('VP',3,'8–12'),wx('LR',3,'12–20'),wx('CU',2,'10–12'),wx('TR',2,'10–12')]},
+        1:{n:'下半身 A',focus:'深蹲為主',ex:[wx('SQ',4,'6–8'),wx('RDL',3,'8–10'),wx('SL',3,'10–12'),wx('HC',3,'10–12'),wx('CA',3,'12–15'),wx('C2',3,'30–45 秒')]},
+        3:{n:'上半身 B',focus:'肌肥大為主',ex:[wx('PI',3,'8–12'),wx('VP2',3,'8–12'),wx('HP2',3,'10–12'),wx('FL',3,'12–15'),wx('LR',3,'15–20'),wx('RD',3,'15–20'),wx('HM',2,'10–12'),wx('TO',2,'10–15')]},
+        4:{n:'下半身 B',focus:'硬舉為主',ex:[wx('DL',3,'5–8'),wx('LP',3,'10–12'),wx('HT',3,'8–12'),wx('QE',3,'12–15'),wx('CA',3,'12–15'),wx('C1',3,'10–15')]}}},
+ s5:{zh:'每週 5 天',sub:'推拉腿＋上下半身',lead:'前三天推、拉、腿分開練，週末前再練一次上半身和下半身。訓練量最大，適合有一年以上經驗、睡眠和恢復都好的人。',
+  days:{0:{n:'推',focus:'胸、肩、三頭',ex:[wx('PH',4,'6–8'),wx('PV',3,'8–10'),wx('PI',3,'8–12'),wx('LR',4,'12–20'),wx('TR',3,'10–15')]},
+        1:{n:'拉',focus:'背、後肩、二頭',ex:[wx('VP',4,'6–10'),wx('HP',3,'8–12'),wx('RD',3,'15–20'),wx('CU',3,'8–12'),wx('HM',2,'10–12')]},
+        2:{n:'腿',focus:'腿、臀',ex:[wx('SQ',4,'6–8'),wx('RDL',3,'8–10'),wx('SL',3,'10–12'),wx('HC',3,'10–12'),wx('CA',4,'12–15')]},
+        4:{n:'上半身',focus:'胸、背、肩、手臂',ex:[wx('PI',3,'8–10'),wx('HP2',3,'10–12'),wx('VP2',3,'8–12'),wx('LR',3,'15–20'),wx('DP',2,'8–12'),wx('CU',2,'10–15')]},
+        5:{n:'下半身',focus:'臀、腿、核心',ex:[wx('DL',3,'5–8'),wx('LP',3,'10–12'),wx('HT',3,'8–12'),wx('C1',3,'10–15'),wx('C2',3,'30–45 秒')]}}},
+};
+const WS={split:'s4',day:0};
+function dayPicks(d){
+  const used=new Set();
+  return d.ex.map(s=>{const e=pickFrom(s.opts,used); if(e) used.add(e.id); return {s,e};});
+}
+function repsText(s,e){
+  if(s.reps.includes('秒')) return s.reps;
+  return (e&&isLight(e)?'12–20':s.reps)+' 下';
+}
+function renderWeek(){
+  const sp=SPLITS[WS.split];
+  $('#splits').innerHTML=Object.entries(SPLITS).map(([k,v])=>`<button type="button" data-split="${k}" aria-pressed="${WS.split===k}"><b>${v.zh}</b><span>${v.sub}</span></button>`).join('');
+  const strip=DAYN.map((n,i)=>{const d=sp.days[i];
+    return `<button type="button" class="wday ${d?'train':'rest'}" data-wday="${i}" aria-pressed="${WS.day===i}"><span class="d">週${n}</span><span class="n">${d?d.n:'休息'}</span></button>`;}).join('');
+  // weekly volume per muscle group: primary = 1 set, secondary = 0.5 set
+  const VOLG=[['胸',['upperChest','chest']],['背',['lats','midBack']],['肩',['frontDelt','sideDelt','rearDelt']],['二頭',['biceps']],['三頭',['triceps']],
+    ['股四頭',['quads']],['腿後',['hamstrings']],['臀',['glutes','gluteMed']],['小腿',['calves']],['核心',['abs','obliques','erectors']]];
+  const vol=VOLG.map(()=>0);
+  Object.values(sp.days).forEach(d=>dayPicks(d).forEach(({s,e})=>{ if(!e) return;
+    VOLG.forEach(([n,ms],i)=>{ if(e.p.some(m=>ms.includes(m))) vol[i]+=s.sets; else if(e.s.some(m=>ms.includes(m))) vol[i]+=s.sets*0.5; }); }));
+  const d=sp.days[WS.day];
+  let right, P=new Set(), Sx=new Set();
+  if(d){
+    const picks=dayPicks(d);
+    picks.forEach(({e})=>{ if(e){e.p.forEach(m=>P.add(m));} });
+    picks.forEach(({e})=>{ if(e){e.s.forEach(m=>{if(!P.has(m))Sx.add(m)});} });
+    const rows=picks.map(({s,e},i)=>{
+      if(!e) return `<div class="prow na"><span class="no">${String(i+1).padStart(2,'0')}</span><span class="th"></span><span class="nm"><b>${EXM[s.opts[0]].zh}<span class="enm">${EXM[s.opts[0]].en}</span></b><small>目前的器材做不到，可以在上面多選一種器材</small></span><span class="dose">—</span></div>`;
+      const comp=e.type==='複合'&&!['core','carry'].includes(e.pat)&&!isLight(e);
+      return prowHTML(i,e,`${s.sets} × ${repsText(s,e)}`,comp?'休息 2–3 分':'休息 60–90 秒',`${e.p.map(m=>M[m].zh.replace(/（.*）/,'')).join('、')}${e.id!==s.opts[0]?` · 代替${EXM[s.opts[0]].zh}`:''}`);
+    }).join('');
+    const sets=picks.reduce((t,{s,e})=>t+(e?s.sets:0),0);
+    right=`<div class="dayhead"><div><div class="eyebrow">週${DAYN[WS.day]} · ${d.focus}</div><h3>${d.n}</h3><p>${picks.length} 個動作 · ${sets} 組 · 約 ${Math.round((sets*2.3+8)/5)*5} 分鐘</p></div>
+      <div class="stepper"><button type="button" data-wstep="-1" aria-label="前一天">‹</button><button type="button" data-wstep="1" aria-label="後一天">›</button></div></div>
+      <div class="prows">${rows}</div>`;
+  } else {
+    right=`<div class="dayhead"><div><div class="eyebrow">週${DAYN[WS.day]}</div><h3>休息日</h3><p>肌肉是在休息的時候長大的</p></div>
+      <div class="stepper"><button type="button" data-wstep="-1" aria-label="前一天">‹</button><button type="button" data-wstep="1" aria-label="後一天">›</button></div></div>
+      <div class="restcard"><p><b>可以做：</b>走路 30–45 分鐘、伸展、泡澡，或完全休息。</p><p><b>不要做：</b>再去練今天沒排到的部位，會影響明天的訓練。</p><p><b>記得：</b>蛋白質照常吃，睡滿 7–9 小時。</p></div>`;
+  }
+  const nm=a=>AREAS[a].zh;
+  $('#weekout').innerHTML=`<p class="fn" style="margin:0">${sp.lead}</p>
+    <div class="weekstrip" role="group" aria-label="選擇星期">${strip}</div>
+    <div class="pbody">
+      <div class="pfigs"><div><svg id="week-front" viewBox="0 0 200 440" role="img" aria-label="當天練到的肌群正面">${figure('front')}</svg><div class="figlabel">正面</div></div>
+        <div><svg id="week-back" viewBox="0 0 200 440" role="img" aria-label="當天練到的肌群背面">${figure('back')}</svg><div class="figlabel">背面</div></div></div>
+      <div class="pcol">${right}</div>
+    </div>
+    <div class="pblock vol"><h3>每週各肌群組數<span>主要肌群算 1 組、輔助算 0.5 組；虛線之間 10–20 組是多數人的有效範圍</span></h3>
+      <div class="wkbars">${VOLG.map(([gn],i)=>{const v=Math.round(vol[i]);
+        return `<div class="wkbar" style="cursor:default"><span class="wl">${gn}</span><span class="wt"><i style="width:${Math.min(100,v/26*100)}%"></i><em style="left:${10/26*100}%"></em><em style="left:${20/26*100}%"></em></span><span class="wv">${v} 組</span></div>`;}).join('')}</div></div>`;
+  highlight($('#week-front'),P,Sx); highlight($('#week-back'),P,Sx);
+}
+
+// ---------- Nutrition coach ----------
+const NKEY='muscle-map-nutrition';
+const NS={sex:'m',age:25,h:175,w:70,act:1.55,goal:'gain',meals:4};
+try{const v=JSON.parse(localStorage.getItem(NKEY)||'null'); if(v&&typeof v==='object') Object.assign(NS,v);}catch(e){}
+const saveN=()=>{try{localStorage.setItem(NKEY,JSON.stringify(NS));}catch(e){}};
+const ACTS=[[1.2,'幾乎不運動（坐辦公室）'],[1.375,'每週運動 1–3 次'],[1.55,'每週運動 3–5 次'],[1.725,'每週運動 6–7 次或勞力工作']];
+const GOALS={gain:['增肌',300,1.8,'目標每週體重增加約 0.25–0.5%。兩週體重都沒變，每天再多吃 150–200 大卡。'],
+ keep:['維持',0,1.6,'體重大致不變，專心讓訓練重量慢慢進步。'],
+ cut:['減脂',-400,2.2,'目標每週體重下降約 0.5–1%。蛋白質吃高一點，訓練照常，可以減少肌肉流失。']};
+const FOODS=[['雞胸肉（熟）','Chicken breast',31,100,'g'],['鮭魚','Salmon',22,100,'g'],['雞蛋','Eggs',6.5,1,'顆'],['板豆腐','Firm tofu',9,100,'g'],['無糖豆漿','Soy milk',3.5,100,'ml'],['希臘優格','Greek yogurt',10,100,'g'],['乳清蛋白','Whey protein',22,1,'匙']];
+const segBtns=(attr,list,cur)=>list.map(([v,l])=>`<button type="button" ${attr}="${v}" aria-pressed="${String(cur)===String(v)}">${l}</button>`).join('');
+function buildFood(){
+  $('#foodout').innerHTML=`<div class="nut">
+    <form class="nform" id="nform" autocomplete="off">
+      <div class="field"><span class="fl">目標</span><div class="seg" id="n-goal">${segBtns('data-goal',Object.entries(GOALS).map(([k,v])=>[k,v[0]]),NS.goal)}</div></div>
+      <div class="field"><span class="fl">性別</span><div class="seg" id="n-sex">${segBtns('data-sex',[['m','男'],['f','女']],NS.sex)}</div></div>
+      <div class="frow">
+        <div class="field"><label class="fl" for="n-age">年齡</label><input id="n-age" type="number" inputmode="numeric" min="14" max="90" value="${NS.age}"></div>
+        <div class="field"><label class="fl" for="n-h">身高 cm</label><input id="n-h" type="number" inputmode="decimal" min="120" max="230" value="${NS.h}"></div>
+        <div class="field"><label class="fl" for="n-w">體重 kg</label><input id="n-w" type="number" inputmode="decimal" min="35" max="250" value="${NS.w}"></div>
+      </div>
+      <div class="field"><label class="fl" for="n-act">活動量</label><select id="n-act">${ACTS.map(([v,l])=>`<option value="${v}" ${+NS.act===v?'selected':''}>${l}</option>`).join('')}</select></div>
+      <div class="field"><span class="fl">每天吃幾餐</span><div class="seg" id="n-meals">${segBtns('data-meals',[[3,'3 餐'],[4,'4 餐'],[5,'5 餐']],NS.meals)}</div></div>
+      <p class="disc">預設是範例數字，請改成你自己的。資料只存在這個瀏覽器。</p>
+    </form>
+    <div class="nres" id="nres"></div></div>`;
+  renderFood();
+}
+function renderFood(){
+  ['goal','sex','meals'].forEach(k=>document.querySelectorAll(`[data-${k}]`).forEach(b=>b.setAttribute('aria-pressed',String(String(NS[k])===b.dataset[k]))));
+  const out=$('#nres');
+  const {age,h,w}=NS;
+  if(!(age>=14&&age<=90&&h>=120&&h<=230&&w>=35&&w<=250)){out.innerHTML='<p class="nerr">請輸入正確的年齡（14–90）、身高（120–230 cm）和體重（35–250 kg）。</p>';return;}
+  const bmr=10*w+6.25*h-5*age+(NS.sex==='m'?5:-161);
+  const tdee=bmr*NS.act, g=GOALS[NS.goal];
+  const kcal=Math.round((tdee+g[1])/10)*10;
+  const p=Math.round(w*g[2]), f=Math.round(kcal*0.25/9), c=Math.max(0,Math.round((kcal-p*4-f*9)/4));
+  const pk=p*4,fk=f*9,ck=c*4,tot=pk+fk+ck;
+  const per=Math.round(p/NS.meals);
+  const amt=([n,en,pr,unit,u])=>{const x=per/pr*unit; if(u==='g'||u==='ml') return Math.round(x/10)*10; if(u==='顆') return Math.round(x*2)/2; return Math.round(x*10)/10;};
+  out.innerHTML=`
+    <div><div class="eyebrow">每天建議熱量 · ${g[0]}</div>
+      <div class="kcal"><b>${kcal.toLocaleString()}</b><span class="u">大卡</span><span class="m">維持體重約 ${Math.round(tdee/10)*10} 大卡（基礎代謝 ${Math.round(bmr)} 大卡 × 活動量）${g[1]?`，${g[1]>0?'多吃':'少吃'} ${Math.abs(g[1])} 大卡`:''}</span></div></div>
+    <div class="macrobar" role="img" aria-label="熱量來源比例"><i style="width:${pk/tot*100}%;background:var(--primary)"></i><i style="width:${ck/tot*100}%;background:var(--secondary)"></i><i style="width:${fk/tot*100}%;background:var(--fat)"></i></div>
+    <div class="mtiles">
+      <div class="mt"><span class="k"><i style="background:var(--primary)"></i>蛋白質 Protein</span><span class="v">${p}<small>g</small></span><span class="s">每公斤 ${g[2]} g · ${Math.round(pk/tot*100)}%</span></div>
+      <div class="mt"><span class="k"><i style="background:var(--secondary)"></i>碳水 Carbs</span><span class="v">${c}<small>g</small></span><span class="s">約 ${(c/60).toFixed(1)} 碗白飯 · ${Math.round(ck/tot*100)}%</span></div>
+      <div class="mt"><span class="k"><i style="background:var(--fat)"></i>脂肪 Fat</span><span class="v">${f}<small>g</small></span><span class="s">熱量的 25%</span></div>
+    </div>
+    <div class="pblock"><h3>每餐蛋白質約 ${per} g<span>${NS.meals} 餐平均分配，選其中一種就夠</span></h3>
+      <div class="foods">${FOODS.map(fd=>`<div class="food"><b>${amt(fd)}<small>${fd[4]}</small></b><span>${fd[0]}</span><small>${fd[1]}</small></div>`).join('')}</div></div>
+    <div class="pblock"><h3>教練提醒</h3><ul class="ntips">
+      <li>${g[3]}</li>
+      <li>練完 2 小時內吃一餐，裡面要有蛋白質和碳水（例如雞胸肉便當、鮭魚飯）。</li>
+      <li>碳水約 ${(c/60).toFixed(1)} 碗白飯的量，可以換成地瓜、燕麥、麵或水果，練前和練後多吃一點。</li>
+      <li>每天喝水約 ${(w*0.035).toFixed(1)} 公升，流汗多再多喝。</li>
+      <li>體重每週量 2–3 次（早上起床、上完廁所），看平均值的變化，不要看單一天。</li>
+      <li>肌酸（Creatine monohydrate）每天 3–5 g 是研究最多的補充品之一，可以選擇性使用。</li>
+    </ul></div>
+    <p class="disc">這些是用 Mifflin-St Jeor 公式估算的起點，實際要看體重變化調整。有疾病、懷孕或特殊飲食需求，請先問醫師或營養師。</p>`;
+}
+document.addEventListener('input',ev=>{
+  const id=ev.target.id;
+  if(id==='n-age'||id==='n-h'||id==='n-w'){NS[{'n-age':'age','n-h':'h','n-w':'w'}[id]]=parseFloat(ev.target.value);saveN();renderFood();}
+});
+document.addEventListener('change',ev=>{ if(ev.target.id==='n-act'){NS.act=+ev.target.value;saveN();renderFood();} });
+document.addEventListener('submit',ev=>{ if(ev.target.id==='nform') ev.preventDefault(); });
+
+document.addEventListener('toggle',ev=>{
+  const d=ev.target; if(!d.classList||!d.classList.contains('eqmore')) return;
+  d.open?EQOPEN.add(d.dataset.eqkey):EQOPEN.delete(d.dataset.eqkey);
+},true);
+// ---------- Nav ----------
+const SECTS=['map','plan','week','prog','food','lib'];
+try{
+  const io=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{ if(en.isIntersecting){ document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('on',b.dataset.go===en.target.id)); } });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  SECTS.forEach(id=>io.observe(document.getElementById(id)));
+}catch(e){}
+
+let LIB='all', LIBAV=false;
+function renderLib(){
+  $('#libfilter').innerHTML=[['all','全部'],...Object.keys(PAT).map(k=>[k,PAT[k][0]])]
+    .map(([k,n])=>`<button type="button" class="chip" data-lib="${k}" aria-pressed="${LIB===k}">${n}</button>`).join('');
+  $('#libfilter').innerHTML+=`<button type="button" class="chip avchip" data-libav="1" aria-pressed="${LIBAV}">只看我的器材能做的</button>`;
+  const list=EX.filter(e=>(LIB==='all'||e.pat===LIB)&&(!LIBAV||avail(e)));
+  $('#libcount').textContent=EX.length;
+  const nm=id=>M[id].zh.replace(/（.*）/,'');
+  $('#libgrid').innerHTML=list.map(e=>`<button type="button" class="card${avail(e)?'':' na'}" data-ex="${e.id}">
+    <span class="pic">${hasImg(e.id)?`<img src="${src(e.id,0)}" alt="${e.zh}" loading="lazy"><img class="b" src="${src(e.id,1)}" alt="" loading="lazy">`:'<span class="ph">暫無照片</span>'}</span>
+    <span class="txt"><span class="t1">${e.zh}</span><span class="t2">${e.en}</span><span class="t4">${eqText(e)}</span>
+    <span class="t3"><i class="dot p" style="background:var(--primary)"></i>${e.p.map(nm).join('、')}</span></span></button>`).join('');
+}
+
+// ---------- Interaction ----------
+const narrow=()=>window.matchMedia('(max-width:860px)').matches;
+const smooth=()=>window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth';
+function toDetail(){ if(narrow()) $('#detail').scrollIntoView({behavior:smooth(),block:'start'}); }
+
+// ---------- Popup for exercises and muscles ----------
+const DLG=$('#dlg'); let SAVED=null, HIST=[];
+const detailHome=document.createElement('span'); detailHome.hidden=true; $('#detail').after(detailHome);
+const snapS=()=>({mode:S.mode,ex:S.ex,muscle:S.muscle,pat:S.pat,tab:S.tab});
+function syncDlg(){
+  $('#dlgback').hidden=!HIST.length;
+  $('#dlgtitle').textContent=S.mode==='exercise'?'動作說明':'肌群說明';
+  $('#dlgbody').scrollTop=0;
+}
+function openModal(set){
+  if(!DLG.open){
+    SAVED=snapS(); HIST=[];
+    $('#dlgbody').appendChild($('#detail'));
+    try{DLG.showModal();}catch(e){DLG.setAttribute('open','');}
+  } else HIST.push(snapS());
+  Object.assign(S,set); render(); syncDlg();
+}
+function modalBack(){ const prev=HIST.pop(); if(prev){Object.assign(S,prev);render();} syncDlg(); }
+DLG.addEventListener('close',()=>{
+  detailHome.before($('#detail'));
+  if(SAVED){Object.assign(S,SAVED);SAVED=null;}
+  HIST=[]; render();
+});
+DLG.addEventListener('click',ev=>{ if(ev.target===DLG) DLG.close(); });
+
+document.addEventListener('click',ev=>{
+  const t=ev.target;
+  const path=t.closest('path.m');
+  if(path){
+    if(DLG.open||!t.closest('#map')){openModal({mode:'muscle',tab:'muscle',muscle:path.dataset.m});return;}
+    S.mode='muscle';S.tab='muscle';S.muscle=path.dataset.m;render();if(!t.closest('#detail'))toDetail();return;}
+  const b=t.closest('button'); if(!b) return;
+  if(b.id==='dlgclose'){DLG.close();return;}
+  if(b.dataset.vtab){VT=b.dataset.vtab==='yt';render();syncDlg();return;}
+  if(b.id==='dlgback'){modalBack();return;}
+  if(b.dataset.go){const el=document.getElementById(b.dataset.go); if(el) el.scrollIntoView({behavior:smooth(),block:'start'}); return;}
+  if(b.dataset.copy){const txt=b.dataset.copy;
+    const done=()=>{b.textContent='已複製';setTimeout(()=>{b.textContent='複製英文';},1500);};
+    const fallback=()=>{const r=document.createRange();const t=b.parentNode.querySelector('.entext');if(t){r.selectNodeContents(t);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);}b.textContent='已選取，按複製';};
+    try{navigator.clipboard.writeText(txt).then(done,fallback);}catch(e){fallback();}
+    return;}
+  if(b.dataset.split){WS.split=b.dataset.split;WS.day=+Object.keys(SPLITS[WS.split].days)[0];renderWeek();return;}
+  if(b.dataset.wday){WS.day=+b.dataset.wday;renderWeek();return;}
+  if(b.dataset.wstep){WS.day=(WS.day+(+b.dataset.wstep)+7)%7;renderWeek();return;}
+  if(b.dataset.goal){NS.goal=b.dataset.goal;saveN();renderFood();return;}
+  if(b.dataset.sex){NS.sex=b.dataset.sex;saveN();renderFood();return;}
+  if(b.dataset.meals){NS.meals=+b.dataset.meals;saveN();renderFood();return;}
+  if(b.dataset.prog){SP.prog=b.dataset.prog;SP.day='A';renderProg();return;}
+  if(b.dataset.pday){SP.day=b.dataset.pday;renderProg();return;}
+  if(b.dataset.week){SP.week=+b.dataset.week;renderProg();return;}
+  if(b.dataset.wk){SP.week=Math.max(0,Math.min(WEEKS.length-1,SP.week+(+b.dataset.wk)));renderProg();return;}
+  if(b.dataset.eq){const q=b.dataset.eq;EQS.has(q)?EQS.delete(q):EQS.add(q);saveEq();renderPlan();renderProg();renderWeek();render();renderLib();return;}
+  if(b.dataset.eqp){EQS=new Set(EQPRESETS.find(x=>x[0]===b.dataset.eqp)[2]);saveEq();renderPlan();renderProg();renderWeek();render();renderLib();return;}
+  if(b.dataset.libav){LIBAV=!LIBAV;renderLib();return;}
+  if(b.dataset.area){const k=b.dataset.area;PS.areas.has(k)?PS.areas.delete(k):PS.areas.add(k);renderPlan();return;}
+  if(b.dataset.time){PS.time=+b.dataset.time;renderPlan();return;}
+  if(b.dataset.zoom){
+    if(b.dataset.zoom==='auto'){ZOOM=null;LP.cx=LP.cx0;LP.cy=LP.cy0;}
+    else ZOOM=Math.max(ZMIN,Math.min(ZMAX,Math.round(((ZOOM??LP.auto)+0.5*(+b.dataset.zoom))*2)/2));
+    applyZoom();return;}
+  if(b.dataset.play){PLAY.on=!PLAY.on;syncPlay();return;}
+  if(b.dataset.frame){PLAY.on=false;PLAY.frame=+b.dataset.frame;syncPlay();return;}
+  if(b.dataset.lib){LIB=b.dataset.lib;renderLib();return;}
+  if(b.dataset.tab){S.tab=b.dataset.tab;S.mode=S.tab==='muscle'?'muscle':'pattern';render();return;}
+  if(b.dataset.muscle){
+    if(DLG.open||!b.closest('#map')){openModal({mode:'muscle',tab:'muscle',muscle:b.dataset.muscle});return;}
+    S.mode='muscle';S.tab='muscle';S.muscle=b.dataset.muscle;render();if(!b.closest('#detail'))toDetail();return;}
+  if(b.dataset.pat){S.mode='pattern';S.pat=b.dataset.pat;render();toDetail();return;}
+  if(b.dataset.ex){VT=false;openModal({mode:'exercise',ex:b.dataset.ex});return;}
+  if(b.dataset.back){S.mode=S.tab==='pattern'?'pattern':'muscle';render();return;}
+  if(b.dataset.top){document.querySelector('.plate').scrollIntoView({behavior:smooth(),block:'start'});return;}
+  if(b.id==='prev'||b.id==='next'){
+    const i=ORDER.indexOf(S.muscle), n=ORDER.length;
+    S.muscle=ORDER[(i+(b.id==='next'?1:-1)+n)%n]; render(); return;
+  }
+});
+document.addEventListener('keydown',ev=>{
+  if(S.mode!=='muscle'||ev.target.closest('input,textarea'))return;
+  if(ev.key==='ArrowRight'||ev.key==='ArrowLeft'){
+    const i=ORDER.indexOf(S.muscle), n=ORDER.length;
+    S.muscle=ORDER[(i+(ev.key==='ArrowRight'?1:-1)+n)%n]; render();
+  }
+});
+
+document.addEventListener('input',ev=>{
+  if(ev.target.id==='zoom-range'){ZOOM=+ev.target.value;applyZoom();}
+});
+// Drag to pan the magnified view
+let DRAG=null, SUPPRESS=false;
+document.addEventListener('pointerdown',ev=>{
+  const svg=ev.target.closest&&ev.target.closest('#loupe-svg'); if(!svg||!LP) return;
+  DRAG={x:ev.clientX,y:ev.clientY,cx:LP.cx,cy:LP.cy,moved:false,scale:(200/(ZOOM??LP.auto))/svg.clientWidth,id:ev.pointerId};
+});
+document.addEventListener('pointermove',ev=>{
+  if(!DRAG||ev.pointerId!==DRAG.id) return;
+  const dx=ev.clientX-DRAG.x, dy=ev.clientY-DRAG.y;
+  if(!DRAG.moved&&Math.hypot(dx,dy)<5) return;
+  DRAG.moved=true; $('#loupe')&&$('#loupe').classList.add('dragging');
+  LP.cx=DRAG.cx-dx*DRAG.scale; LP.cy=DRAG.cy-dy*DRAG.scale; applyZoom();
+});
+const endDrag=()=>{ if(DRAG){ if(DRAG.moved){SUPPRESS=true;setTimeout(()=>SUPPRESS=false,0);} DRAG=null; $('#loupe')&&$('#loupe').classList.remove('dragging'); } };
+document.addEventListener('pointerup',endDrag); document.addEventListener('pointercancel',endDrag);
+document.addEventListener('click',ev=>{ if(SUPPRESS){ev.stopPropagation();ev.preventDefault();SUPPRESS=false;} },true);
+
+// Hover name tag (mouse only)
+const tip=$('#tip');
+document.addEventListener('pointermove',ev=>{
+  if(ev.pointerType!=='mouse'){tip.hidden=true;return;}
+  const p=ev.target.closest&&ev.target.closest('path.m');
+  if(!p){tip.hidden=true;return;}
+  tip.textContent=M[p.dataset.m].zh;
+  tip.hidden=false;
+  tip.style.left=(ev.clientX+12)+'px'; tip.style.top=(ev.clientY+12)+'px';
+});
+
+render();
+renderPlan();
+renderWeek();
+renderProg();
+buildFood();
+renderLib();
+$('#stat-ex').textContent=EX.length;
+</script>
+
+</body>
+</html>
