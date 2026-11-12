@@ -367,10 +367,9 @@ html:has(dialog[open]){overflow:hidden}
 .rtfloat.flash{background:var(--good)}
 @media (prefers-reduced-motion:reduce){.ring .rfg{transition:none}}
 @media (max-width:420px){.rttime b{font-size:2.674rem}.ring{width:96px;height:96px}.rtctl button{padding:9px 8px}}
-.lbl.sec{fill:var(--sec-text);font-weight:700}
-.lead.sec{stroke:var(--sec-text);opacity:.9}.leaddot.sec{fill:var(--sec-text);opacity:1}
-.chip:has(> .dot.s){color:var(--sec-text);font-weight:600}
-.sec h3:has(.dot.s),.pblock h3:has(+ .crow .dot.s){color:var(--sec-text)}
+.dlg .lbl.sec{fill:var(--sec-text);font-weight:700}
+.dlg .lead.sec{stroke:var(--sec-text);opacity:.9}.dlg .leaddot.sec{fill:var(--sec-text);opacity:1}
+.dlg .secmuscles .chip{color:var(--sec-text);font-weight:600}
 .mtabs button{white-space:nowrap}
 @media (max-width:520px){.mtabs{width:100%}.mtabs button{flex:1;padding:7px 8px;font-size:0.756rem}}
 .vpanel{display:grid;gap:10px;max-width:980px}
@@ -887,7 +886,9 @@ function applyZoom(){
 function layoutLabels(svg,vb){
   const NS='http://www.w3.org/2000/svg', g=svg.querySelector('.lbls');
   g.innerHTML='';
-  const {view,P,focus}=LP, fs=vb.w*0.042, m=fs*0.22;
+  // labels keep a steady on-screen size (about 13px) whatever the zoom or popup width
+  const px=svg.getBoundingClientRect().width||svg.clientWidth||420;
+  const {view,P,focus}=LP, fs=vb.w*Math.min(0.042,13/px), m=fs*0.22;
   const items=[];
   for(const id in BB[view]){
     const o=BB[view][id], ax=(o.x+o.x2)/2, ay=(o.y+o.y2)/2;
@@ -1028,7 +1029,7 @@ function render(){
       <p class="tip">${e.cue}</p></div><div class="dcol">
       ${loupe(focus,P,Sx)}
       <div class="sec"><h3>主要肌群</h3><div class="crow">${e.p.map(x=>chip(x,'p')).join('')}</div></div>
-      ${e.s.length?`<div class="sec"><h3>輔助肌群</h3><div class="crow">${e.s.map(x=>chip(x,'s')).join('')}</div></div>`:''}</div></div>`}
+      ${e.s.length?`<div class="sec secmuscles"><h3>輔助肌群</h3><div class="crow">${e.s.map(x=>chip(x,'s')).join('')}</div></div>`:''}</div></div>`}
       <button type="button" class="back toplink" data-top="1">↑ 回到全身圖</button>`;
   } else {
     const k=S.pat, list=sortEx(EX.filter(e=>e.pat===k));
