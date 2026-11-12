@@ -397,6 +397,15 @@ a.tbtn{text-decoration:none;display:inline-flex;align-items:center}
 .meal li b{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
 .mmac{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:.78rem;color:var(--muted)}
 .mmac b{color:var(--ink);font-weight:600}
+.mshare{display:grid;gap:5px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.mshead{font-size:.74rem;font-weight:700;color:var(--muted)}
+.mrow{display:grid;grid-template-columns:3.2em 4.4em minmax(0,1fr) 2.6em;gap:8px;align-items:center;font-size:.8rem}
+.mrow b{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.mrow b small{font-weight:400;color:var(--muted);margin-left:2px;font-size:.72rem}
+.mbarx{height:7px;border-radius:4px;background:var(--chip);position:relative;overflow:hidden}
+.mbarx i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.mrow em{font-style:normal;text-align:right;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.mcum{font-size:.74rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:5px;margin-top:2px}
 .mtip{margin:0;font-size:.8rem;color:var(--muted);border-left:3px solid var(--secondary);padding-left:8px}
 .mfoot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 @media (max-width:760px){.mfoot{grid-template-columns:minmax(0,1fr)}}
@@ -1484,6 +1493,10 @@ function renderMenu(){
     return {i,label,dish,r};
   });
   const tot=meals.reduce((t,m)=>({kcal:t.kcal+m.r.kcal,P:t.P+m.r.P,C:t.C+m.r.C,F:t.F+m.r.F}),{kcal:0,P:0,C:0,F:0});
+  let cK=0,cP=0; meals.forEach(m=>{cK+=m.r.kcal;cP+=m.r.P;m.cumK=cK;m.cumP=cP;});
+  const pc=(a,t)=>Math.round(a/Math.max(1,t)*100);
+  const shareHTML=m=>{const rows=[['熱量',m.r.kcal,NT.kcal,'大卡','var(--ink)'],['蛋白質',m.r.P,NT.p,'g','var(--primary)'],['碳水',m.r.C,NT.c,'g','var(--secondary)'],['脂肪',m.r.F,NT.f,'g','var(--fat)']];
+    return `<div class="mshare"><div class="mshead">佔今天建議攝取量</div>${rows.map(([l,a,t,u,col])=>`<div class="mrow"><span>${l}</span><b>${Math.round(a)}<small>${u}</small></b><span class="mbarx" aria-hidden="true"><i style="width:${Math.min(100,pc(a,t))}%;background:${col}"></i></span><em>${pc(a,t)}%</em></div>`).join('')}<div class="mcum">吃完這餐，今天累計：熱量 ${pc(m.cumK,NT.kcal)}%・蛋白質 ${pc(m.cumP,NT.p)}%</div></div>`;};
   const shop={}; meals.forEach(m=>m.r.items.forEach(([id,q])=>{shop[id]=(shop[id]||0)+q;}));
   const wd='日一二三四五六'[d.getDay()];
   const rel=MD.off===0?'今天':MD.off===1?'明天':MD.off===-1?'昨天':(MD.off>0?`${MD.off} 天後`:`${-MD.off} 天前`);
@@ -1496,7 +1509,7 @@ function renderMenu(){
       <div class="mtop"><span class="mslot">${m.label}</span><button type="button" class="mswap" data-mswap="${m.i}">換一道 ↻</button></div>
       <h4>${m.dish.n}</h4>
       <ul>${m.r.items.map(([id,q])=>`<li><span>${FD[id][0]}</span><b>${qtyText(id,q)}</b></li>`).join('')}</ul>
-      <div class="mmac"><span>約 <b>${Math.round(m.r.kcal)}</b> 大卡</span><span>蛋白質 <b>${Math.round(m.r.P)}</b>g</span><span>碳水 <b>${Math.round(m.r.C)}</b>g</span><span>脂肪 <b>${Math.round(m.r.F)}</b>g</span></div>
+      ${shareHTML(m)}
       ${m.dish.tip?`<p class="mtip">${m.dish.tip}</p>`:''}
     </article>`).join('')}</div>
     <div class="mfoot">
