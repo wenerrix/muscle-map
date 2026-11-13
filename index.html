@@ -438,6 +438,11 @@ a.tbtn{text-decoration:none;display:inline-flex;align-items:center}
 .loupe,.loupe *,.figs svg,.figs svg *,.pfigs svg,.pfigs svg *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .loupe text,.figs svg text,.pfigs svg text{cursor:inherit;pointer-events:none}
 .loupe{caret-color:transparent}
+/* hide the text cursor everywhere except where you can actually type */
+body{caret-color:transparent}
+input,textarea,select,[contenteditable="true"]{caret-color:auto}
+.gw,.dlg{caret-color:transparent}
+.gw input,.gw textarea,.dlg input,.dlg textarea{caret-color:auto}
 /* ===== layout pass ===== */
 @media (max-width:700px){.shead::after{display:none}}
 @media (max-width:640px){
@@ -1716,6 +1721,7 @@ function startGuided(root,title){
   if(!list.length) return;
   Object.assign(GW,{list,i:0,title,start:Date.now(),frame:0,end:false,confirm:false});
   const g=$('#gw'); try{g.showModal();}catch(e){g.setAttribute('open','');}
+  setTimeout(()=>{const f=g.querySelector('.gwbig'); if(f) f.focus({preventScroll:true});},0);   // start on the main button, not on the text
   try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(l=>{GW.wl=l;}).catch(()=>{});}catch(e){}
   clearInterval(GW.tick); GW.tick=setInterval(gwClock,1000);
   renderGW();
