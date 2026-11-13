@@ -436,6 +436,84 @@ a.tbtn{text-decoration:none;display:inline-flex;align-items:center}
   .figs{gap:2px}
   .hero .stats div{padding:10px 12px}
 }
+:root{--rec-hot:#D9472B;--rec-warm:#E0A100}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rec-hot:#FF6B4A;--rec-warm:#F5C842}}
+:root[data-theme="dark"]{--rec-hot:#FF6B4A;--rec-warm:#F5C842}
+.recfig .m.rec-hot{fill:var(--rec-hot)}
+.recfig .m.rec-warm{fill:var(--rec-warm)}
+.recfig .m.rec-ready{fill:var(--good)}
+.recfig .m{opacity:1}
+.rsw{width:12px;height:12px;border-radius:3px;display:inline-block;flex-shrink:0;background:var(--muscle)}
+.rsw.hot{background:var(--rec-hot)}.rsw.warm{background:var(--rec-warm)}.rsw.ready{background:var(--good)}
+.reclegend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.reclegend span{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--plate)}
+.reclegend b{font-size:.86rem}
+.reclegend small{grid-column:1/-1;font-size:.72rem;color:var(--muted)}
+@media (max-width:760px){.reclegend{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.recsugg{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:color-mix(in srgb,var(--good) 8%,var(--surface))}
+.recpick{margin:2px 0 0;font-size:1.05rem}
+.recpick b{font-size:1.25rem}
+.recdemo{margin:0;font-size:.82rem;padding:8px 12px;border-radius:10px;border:1px dashed var(--line);background:var(--plate);color:var(--muted)}
+.recdemo b{color:var(--ink)}
+.rectable{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.recrow{display:grid;grid-template-columns:12px minmax(0,1fr) auto auto;gap:8px;align-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.82rem;padding:7px 10px;border-radius:9px;cursor:pointer;text-align:left}
+.recrow:hover{border-color:var(--muted)}
+.recrow .rl{color:var(--muted);font-size:.76rem}
+.recrow .rw{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);min-width:3.6em;text-align:right}
+.gostart{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--primary);color:#fff;font:inherit;font-weight:700;font-size:.9rem;padding:9px 16px;border-radius:10px;cursor:pointer}
+.gostart:hover{filter:brightness(1.05)}
+.gorow{display:flex;justify-content:flex-end;margin-top:8px}
+/* guided workout */
+.gw{border:0;padding:0;margin:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:var(--bg);color:var(--ink)}
+.gw[open]{display:flex;flex-direction:column}
+.gw::backdrop{background:var(--bg)}
+#gwbody{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;padding:max(12px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.gwbar{display:flex;align-items:center;gap:12px;max-width:1200px;width:100%;margin:0 auto}
+.gwt{flex:1;min-width:0;display:grid}
+.gwt b{font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gwclock{font-family:var(--f-mono);font-size:1.1rem;font-variant-numeric:tabular-nums;color:var(--muted)}
+.gwprog{display:flex;gap:4px;max-width:1200px;width:100%;margin:10px auto 14px}
+.gwseg{flex:1;height:8px;border:0;padding:0;border-radius:4px;background:var(--chip);position:relative;overflow:hidden;cursor:pointer}
+.gwseg i{position:absolute;left:0;top:0;bottom:0;background:var(--good)}
+.gwseg.cur{outline:2px solid var(--ink);outline-offset:2px}
+.gwmain{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;max-width:1200px;width:100%;margin:0 auto;align-items:start}
+@media (max-width:820px){.gwmain{grid-template-columns:minmax(0,1fr);gap:14px}}
+.gwleft,.gwright{display:grid;gap:12px;min-width:0;align-content:start}
+.gwcount{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+.gwleft h2{margin:0;font-size:clamp(1.6rem,4vw,2.2rem);line-height:1.15}
+.gwhead2,.gwmedia{display:grid;gap:10px;min-width:0}
+.gwhead2 .tgt{justify-self:start}
+@media (max-width:820px){
+  .gwleft{display:contents}
+  .gwhead2{order:0;gap:4px}
+  .gwright{order:1}
+  .gwmedia{order:2}
+  .gwright .gwbig{position:sticky;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:2;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+}
+.gwleft .tgt{justify-self:start}
+.gwstage{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/2;background:#1b1f23;max-width:100%}
+.gwstage img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:820px){.gwstage{max-height:34vh;aspect-ratio:auto}.gwstage img{max-height:34vh}}
+.gwbig{width:100%;border:0;background:var(--primary);color:#fff;font:inherit;font-size:1.15rem;font-weight:700;padding:16px;border-radius:14px;cursor:pointer}
+.gwbig.good{background:var(--good)}
+.gwbig:active{transform:translateY(1px)}
+.srow.next .sn{color:var(--primary);font-weight:700}
+.gwnav{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;order:9}
+.gwnav .tnote{text-align:center}
+.gwconfirm{max-width:1200px;width:100%;margin:0 auto 14px;border:1.5px solid var(--primary);border-radius:14px;padding:14px 16px;background:color-mix(in srgb,var(--primary) 8%,var(--surface));display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.gwconfirm p{margin:0}
+.gwconfirm .gwbig{width:auto;font-size:1rem;padding:10px 16px}
+.gwdone{max-width:760px;width:100%;margin:10px auto 0;display:grid;gap:14px}
+.gwdone h2{margin:0;font-size:2.2rem}
+.gwstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.gwstats div{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);display:grid}
+.gwstats b{font-family:var(--f-display);font-size:2.2rem;line-height:1}
+.gwstats span{font-size:.8rem;color:var(--muted)}
+.gwlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.gwlist li{display:grid;grid-template-columns:9em minmax(0,1fr);gap:10px;font-size:.88rem;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.gwlist li span{color:var(--muted);font-variant-numeric:tabular-nums}
+.gwdone .gwbig{width:auto;padding:12px 28px}
+
 .tooltip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:0.756rem;padding:3px 9px;border-radius:6px;z-index:20;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){.m{transition:none}}
 /* ===== Layout v2: nav, hero, gear band, sections ===== */
@@ -559,6 +637,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <span class="brand">肌群地圖<small>Muscle Map</small></span>
     <div class="navlinks" id="navlinks">
       <button type="button" data-go="map">肌群地圖</button>
+      <button type="button" data-go="rec">恢復狀態</button>
       <button type="button" data-go="plan">今天練什麼</button>
       <button type="button" data-go="week">一週菜單</button>
       <button type="button" data-go="prog">特別計畫</button>
@@ -606,6 +685,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       </div>
       <div class="detail" id="detail" aria-live="polite"></div>
     </div>
+  </section>
+
+  <section class="sect" id="rec" aria-label="恢復狀態">
+    <div class="shead" data-word="RECOVERY">
+      <div><div class="eyebrow">Recovery · 恢復狀態</div><h2>哪些肌肉可以練？</h2>
+      <p class="sub">依照你的訓練紀錄，顯示每塊肌肉上次練是幾天前。紅色還在恢復，綠色可以練，系統會建議今天練哪些部位。</p></div>
+    </div>
+    <div id="recout"></div>
   </section>
 
   <section class="sect" id="plan" aria-label="今天練什麼">
@@ -669,6 +756,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   </div>
   <div class="dlgbody" id="dlgbody"></div>
 </dialog>
+<dialog class="gw" id="gw" aria-label="訓練模式"><div id="gwbody"></div></dialog>
 <button type="button" class="rtfloat" id="rtfloat" hidden>⏱</button>
 <div class="tooltip" id="tip" hidden></div>
 
@@ -1174,7 +1262,7 @@ function renderPlan(){
       ${helped.size?`<div class="pblock"><h3>這份課表也會練到<span>輔助肌群</span></h3><div class="crow">${helpChips}</div></div>`:''}
       ${missing.length?`<p class="warn">目前的器材沒有適合練「${missing.map(a=>AREAS[a].zh).join('、')}」的動作，可以多選一種器材。</p>`:''}
       ${tooMany?`<p class="warn">一次選了很多部位，每個部位只能分到 1 個動作。建議把部位分到不同天練，或選更長的時間。</p>`:''}
-      <div class="pblock"><h3>建議課表<span>由上往下做，點動作看示範</span></h3><div class="prows">${rows}</div></div>
+      <div class="pblock"><h3>建議課表<span>由上往下做，點動作看示範</span></h3><div class="prows">${rows}</div><div class="gorow"><button type="button" class="gostart" data-gwstart="plan">▶ 開始這份課表</button></div></div>
       <div class="psum"><span>動作 <b>${plan.length}</b></span><span>總組數 <b>${totalSets}</b></span><span>含暖身約 <b>${minutes}</b> 分鐘</span><span>重量：每組做到還剩 1–3 下的程度</span></div>
     </div></div>`;
   highlight($('#plan-front'),target,helped); highlight($('#plan-back'),target,helped);
@@ -1253,6 +1341,7 @@ function renderProg(){
         <h3>課表<span>每週練 2 次，A、B 兩天中間至少隔一天</span></h3>
         <div class="seg daytabs" role="group" aria-label="選擇訓練日">${['A','B'].map(d=>`<button type="button" data-pday="${d}" aria-pressed="${SP.day===d}">${d} 日</button>`).join('')}</div>
         <div class="prows" style="margin-top:10px">${rows}</div>
+        <div class="gorow"><button type="button" class="gostart" data-gwstart="prog">▶ 開始 ${SP.day} 日訓練</button></div>
       </div>
       <div class="pblock"><h3>進度安排<span>一次一步，照週數往下</span></h3>
         <div class="weeks">
@@ -1343,7 +1432,8 @@ function renderWeek(){
     const sets=picks.reduce((t,{s,e})=>t+(e?s.sets:0),0);
     right=`<div class="dayhead"><div><div class="eyebrow">週${DAYN[WS.day]} · ${d.focus}</div><h3>${d.n}</h3><p>${picks.length} 個動作 · ${sets} 組 · 約 ${Math.round((sets*2.3+8)/5)*5} 分鐘</p></div>
       <div class="stepper"><button type="button" data-wstep="-1" aria-label="前一天">‹</button><button type="button" data-wstep="1" aria-label="後一天">›</button></div></div>
-      <div class="prows">${rows}</div>`;
+      <div class="prows">${rows}</div>
+      <div class="gorow"><button type="button" class="gostart" data-gwstart="week">▶ 開始${d.n}訓練</button></div>`;
   } else {
     right=`<div class="dayhead"><div><div class="eyebrow">週${DAYN[WS.day]}</div><h3>休息日</h3><p>肌肉是在休息的時候長大的</p></div>
       <div class="stepper"><button type="button" data-wstep="-1" aria-label="前一天">‹</button><button type="button" data-wstep="1" aria-label="後一天">›</button></div></div>
@@ -1542,8 +1632,144 @@ function renderMenu(){
     </div>`;
 }
 
+// ---------- Recovery heat map (built from the training log) ----------
+function scheduleRec(){ clearTimeout(scheduleRec.t); scheduleRec.t=setTimeout(()=>{ try{renderRecovery();}catch(e){} },250); }
+const dayDiff=k=>{const [y,m,d]=k.split('-').map(Number);const a=new Date(y,m-1,d),n=new Date();const b=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.round((b-a)/86400000);};
+const keyAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+function demoLog(){ // sample history shown only while the real log is empty; never saved
+  const s=n=>Array.from({length:n},()=>({w:'',r:'10',d:true}));
+  return {bench:{[keyAgo(0)]:s(4)},ohp:{[keyAgo(0)]:s(3)},pushdown:{[keyAgo(0)]:s(3)},
+    row:{[keyAgo(2)]:s(4)},pullup:{[keyAgo(2)]:s(3)},curl:{[keyAgo(2)]:s(3)},
+    squat:{[keyAgo(4)]:s(4)},rdl:{[keyAgo(4)]:s(3)},calfRaise:{[keyAgo(4)]:s(3)},plank:{[keyAgo(1)]:s(3)}};
+}
+function recState(){
+  const real=Object.values(LOG).some(days=>Object.values(days||{}).some(sets=>(sets||[]).some(x=>x.d)));
+  const src=real?LOG:demoLog();
+  const R={}; Object.keys(M).forEach(m=>R[m]={last:null,recent:0,w7:0});
+  for(const [id,days] of Object.entries(src)){
+    const e=EXM[id]; if(!e) continue;
+    for(const [k,sets] of Object.entries(days||{})){
+      const n=(sets||[]).filter(x=>x.d).length; if(!n) continue;
+      const dd=dayDiff(k); if(dd<0) continue;
+      const credit=(m,eff)=>{const r=R[m]; if(!r) return; if(r.last===null||dd<r.last) r.last=dd; if(dd<=1) r.recent+=eff; if(dd<7) r.w7+=eff;};
+      e.p.forEach(m=>credit(m,n)); e.s.forEach(m=>credit(m,n*0.5));
+    }
+  }
+  for(const r of Object.values(R)){
+    r.st=r.last===null?'none':(r.last<=1&&r.recent>=2)?'hot':r.last<=2?'warm':'ready';
+  }
+  return {R,real};
+}
+const REC_TXT={hot:['恢復中','練完 0–1 天，先讓它休息'],warm:['快恢復了','第 2 天，可以輕量練'],ready:['可以練','3 天以上沒練'],none:['還沒練過','沒有紀錄']};
+function renderRecovery(){
+  const box=$('#recout'); if(!box) return;
+  const {R,real}=recState();
+  const nm=id=>M[id].zh.replace(/（.*）/,'');
+  // suggest body areas whose muscles are all rested, longest-rested first
+  const score=a=>{const ms=AREAS[a].m.map(m=>R[m]); if(ms.some(r=>r.st==='hot')) return -1;
+    return ms.reduce((t,r)=>t+(r.last===null?7:Math.min(7,r.last))-(r.st==='warm'?3:0),0)/ms.length;};
+  const sugg=Object.keys(AREAS).map(a=>[a,score(a)]).filter(x=>x[1]>=2.5).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
+  const order={hot:0,warm:1,ready:2,none:3};
+  const rows=Object.keys(M).sort((a,b)=>order[R[a].st]-order[R[b].st]||((R[a].last??99)-(R[b].last??99)));
+  const lastTxt=r=>r.last===null?'—':r.last===0?'今天':r.last===1?'昨天':`${r.last} 天前`;
+  box.innerHTML=`${real?'':'<p class="recdemo">目前是<b>範例資料</b>。在任何動作的「訓練」分頁按 ✓ 完成組數後，這裡就會換成你自己的恢復狀態。</p>'}
+  <div class="pbody">
+    <div class="pfigs recfig"><div><svg id="rec-front" viewBox="0 0 200 440" role="img" aria-label="恢復狀態正面">${figure('front')}</svg><div class="figlabel">正面</div></div>
+      <div><svg id="rec-back" viewBox="0 0 200 440" role="img" aria-label="恢復狀態背面">${figure('back')}</svg><div class="figlabel">背面</div></div></div>
+    <div class="pcol">
+      <div class="reclegend">${['hot','warm','ready','none'].map(k=>`<span><i class="rsw ${k}"></i><b>${REC_TXT[k][0]}</b><small>${REC_TXT[k][1]}</small></span>`).join('')}</div>
+      <div class="recsugg">
+        <div><div class="eyebrow">今天建議練</div>
+          <p class="recpick">${sugg.length?sugg.map(a=>`<b>${AREAS[a].zh}</b>`).join('、'):'大部分肌肉還在恢復，今天可以休息或做輕鬆的核心訓練'}</p></div>
+        ${sugg.length?`<button type="button" class="tbtn strong" data-recplan="${sugg.join(',')}">用這些部位排課表 ›</button>`:''}
+      </div>
+      <div class="pblock"><h3>各肌群狀態<span>點肌肉看說明</span></h3>
+        <div class="rectable">${rows.map(id=>{const r=R[id];return `<button type="button" class="recrow" data-muscle="${id}"><i class="rsw ${r.st}"></i><span class="rn">${nm(id)}</span><span class="rl">${lastTxt(r)}</span><span class="rw">${r.w7?Math.round(r.w7*10)/10+' 組':''}</span></button>`;}).join('')}</div>
+        <p class="tnote">「組」是最近 7 天的組數：主要肌群算 1 組，輔助肌群算 0.5 組。</p></div>
+    </div></div>`;
+  ['rec-front','rec-back'].forEach(id=>document.getElementById(id).querySelectorAll('.m').forEach(p=>p.classList.add('rec-'+R[p.dataset.m].st)));
+}
+
+// ---------- Guided workout mode ----------
+const GW={list:[],i:0,title:'',start:0,tick:null,frame:0,end:false,confirm:false,wl:null};
+function gwSets(k){const it=GW.list[k]; TGT={sets:it.sets,text:it.dose}; return todaySets(EXM[it.id]);}
+function startGuided(root,title){
+  const list=[...root.querySelectorAll('.prow[data-ex]')].map(b=>{const d=b.querySelector('.dose');const txt=d&&d.firstChild?d.firstChild.textContent.trim():'';return {id:b.dataset.ex,dose:txt,sets:parseInt(txt,10)||3};});
+  if(!list.length) return;
+  Object.assign(GW,{list,i:0,title,start:Date.now(),frame:0,end:false,confirm:false});
+  const g=$('#gw'); try{g.showModal();}catch(e){g.setAttribute('open','');}
+  try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(l=>{GW.wl=l;}).catch(()=>{});}catch(e){}
+  clearInterval(GW.tick); GW.tick=setInterval(gwClock,1000);
+  renderGW();
+}
+function gwClock(){const c=$('#gw-clock'); if(c) c.textContent=mmss(Math.floor((Date.now()-GW.start)/1000));}
+function gwTotals(){let sets=0,vol=0,done=0; GW.list.forEach((it,k)=>{const st=gwSets(k).filter(s=>s.d); if(st.length) done++; sets+=st.length; st.forEach(s=>{vol+=num(s.w)*num(s.r);});}); return {sets,vol,done};}
+function renderGW(){
+  const box=$('#gwbody'); if(!box) return;
+  const total=GW.list.length;
+  const prog=GW.list.map((it,k)=>{const st=gwSets(k),d=st.filter(s=>s.d).length;
+    return `<button type="button" class="gwseg${k===GW.i&&!GW.end?' cur':''}" data-gwgo="${k}" aria-label="${EXM[it.id].zh}，完成 ${d}/${st.length} 組"><i style="width:${d/st.length*100}%"></i></button>`;}).join('');
+  const head=`<div class="gwbar"><div class="gwt"><span class="eyebrow">訓練中</span><b>${GW.title}</b></div>
+    <div class="gwclock" id="gw-clock" aria-label="訓練時間">${mmss(Math.floor((Date.now()-GW.start)/1000))}</div>
+    <button type="button" class="tbtn" data-gw="end">結束</button></div>
+    <div class="gwprog">${prog}</div>`;
+  if(GW.end){
+    const t=gwTotals(), mins=Math.max(1,Math.round((Date.now()-GW.start)/60000));
+    box.innerHTML=head+`<div class="gwdone"><div class="eyebrow">Workout Complete</div><h2>訓練完成！</h2>
+      <div class="gwstats"><div><b>${mins}</b><span>分鐘</span></div><div><b>${t.done}</b><span>/ ${total} 個動作</span></div><div><b>${t.sets}</b><span>組</span></div>${t.vol>0?`<div><b>${Math.round(t.vol).toLocaleString()}</b><span>kg 總量</span></div>`:''}</div>
+      <ul class="gwlist">${GW.list.map((it,k)=>{const e=EXM[it.id],st=gwSets(k).filter(s=>s.d);return `<li><b>${e.zh}</b><span>${st.length?st.map(s=>`${s.w?s.w+(loaded(e)?'kg':'')+' × ':''}${s.r||'?'}`).join('、'):'沒有做'}</span></li>`;}).join('')}</ul>
+      <p class="tnote">紀錄都已經存好了，恢復狀態也會跟著更新。</p>
+      <div class="tbtns"><button type="button" class="gwbig" data-gw="close">完成</button><button type="button" class="tbtn" data-gw="back">回到訓練</button></div></div>`;
+    return;
+  }
+  const it=GW.list[GW.i], e=EXM[it.id], sets=gwSets(GW.i), u=unitOf(e), nextIdx=sets.findIndex(s=>!s.d);
+  const wl=loaded(e)?'重量 kg':'阻力／備註';
+  const img=hasImg(e.id)?`<div class="gwstage"><img src="${src(e.id,GW.frame)}" alt="${e.zh} 姿勢 ${GW.frame+1}"><span class="badge">姿勢 ${GW.frame+1} / 2</span></div>
+     <div class="tbtns"><button type="button" class="tbtn" data-gwframe="0" aria-pressed="${GW.frame===0}">姿勢 1</button><button type="button" class="tbtn" data-gwframe="1" aria-pressed="${GW.frame===1}">姿勢 2</button><a class="tbtn" href="${ytUrl(e)}" target="_blank" rel="noopener">YouTube ↗</a></div>`:'';
+  const rows=sets.map((s,k)=>`<div class="srow${s.d?' isdone':''}${k===nextIdx?' next':''}"><span class="sn">${k+1}</span>
+      <input class="sin gin" id="gw-${k}-w" data-gset="${k}" data-k="w" value="${String(s.w).replace(/"/g,'&quot;')}" inputmode="${loaded(e)?'decimal':'text'}" placeholder="${loaded(e)?'kg':'例：綠色'}" aria-label="第 ${k+1} 組 ${wl}">
+      <input class="sin gin" id="gw-${k}-r" data-gset="${k}" data-k="r" value="${String(s.r).replace(/"/g,'&quot;')}" inputmode="numeric" placeholder="${u[1]}" aria-label="第 ${k+1} 組 ${u[0]}">
+      <button type="button" class="sdone" data-gwdone="${k}" aria-pressed="${s.d}" aria-label="第 ${k+1} 組完成">✓</button></div>`).join('');
+  const last=GW.i===total-1;
+  const P=[60,90,120,180];
+  box.innerHTML=head+`${GW.confirm?`<div class="gwconfirm" role="alertdialog" aria-label="結束訓練"><p><b>要結束這次訓練嗎？</b>已完成的組數都已經存好了。</p><div class="tbtns"><button type="button" class="tbtn" data-gw="resume">繼續訓練</button><button type="button" class="gwbig" data-gw="finish">結束並看總結</button></div></div>`:''}
+  <div class="gwmain">
+    <section class="gwleft">
+      <div class="gwhead2"><div class="gwcount">動作 ${GW.i+1} / ${total}</div>
+      <h2>${e.zh}</h2><div class="en">${e.en}</div>
+      ${it.dose?`<span class="tgt">目標 ${it.dose}</span>`:''}</div>
+      <div class="gwmedia">${img}<p class="tip">${e.cue}</p></div>
+    </section>
+    <section class="gwright">
+      <div class="tcard">
+        <div class="sgrid"><div class="shd"><span>組</span><span>${wl}</span><span>${u[0]}</span><span>完成</span></div>${rows}</div>
+        ${nextIdx>=0?`<button type="button" class="gwbig" data-gwdone="${nextIdx}">✓ 完成第 ${nextIdx+1} 組</button>`
+          :`<button type="button" class="gwbig good" data-gw="${last?'finish':'next'}">${last?'全部完成，看總結 ›':'這個動作完成了，下一個 ›'}</button>`}
+        <div class="tbtns"><button type="button" class="tbtn" data-addset="gw">+ 多做一組</button></div>
+      </div>
+      <div class="tcard rt trt" id="rtcard">
+        <div class="rtbody">
+          <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="rbg"/><circle cx="60" cy="60" r="52" class="rfg" id="rt-ring" transform="rotate(-90 60 60)"/></svg>
+          <div class="rttime"><b id="rt-time">1:30</b><span id="rt-state">準備好就開始</span></div>
+        </div>
+        <div class="rtpre" role="group" aria-label="休息時間">${P.map(x=>`<button type="button" data-rtp="${x}" aria-pressed="false">${x<120?x+' 秒':(x/60)+' 分'}</button>`).join('')}</div>
+        <div class="rtctl"><button type="button" data-rt="minus" aria-label="減 15 秒">−15</button><button type="button" class="rtmain" data-rt="toggle" id="rt-main">開始</button><button type="button" data-rt="plus" aria-label="加 15 秒">+15</button><button type="button" data-rt="reset">重設</button></div>
+      </div>
+      <div class="gwnav"><button type="button" class="tbtn" data-gw="prev" ${GW.i===0?'disabled':''}>‹ 上一個動作</button>
+        <span class="tnote">${last?'最後一個動作':`下一個：${EXM[GW.list[GW.i+1].id].zh}`}</span>
+        <button type="button" class="tbtn" data-gw="${last?'finish':'next'}">${last?'結束 ›':'下一個 ›'}</button></div>
+    </section>
+  </div>`;
+  rtPaint();
+}
+function closeGW(){ clearInterval(GW.tick); try{GW.wl&&GW.wl.release();}catch(e){} GW.wl=null; const g=$('#gw'); if(g.open) g.close(); }
+document.addEventListener('input',ev=>{
+  const el=ev.target; if(!el.classList||!el.classList.contains('gin')) return;
+  const s=gwSets(GW.i)[+el.dataset.gset]; if(!s) return; s[el.dataset.k]=el.value; saveLog();
+});
+
 // ---------- Nav ----------
-const SECTS=['map','plan','week','prog','food','lib'];
+const SECTS=['map','rec','plan','week','prog','food','lib'];
 try{
   const io=new IntersectionObserver(ents=>{
     ents.forEach(en=>{ if(en.isIntersecting){ document.querySelectorAll('[data-go]').forEach(b=>b.classList.toggle('on',b.dataset.go===en.target.id)); } });
@@ -1575,7 +1801,7 @@ let MT='info';            // popup sub-tab for an exercise: 'info' or 'train'
 let TGT=null;             // target from the workout row the exercise was opened from
 const LOGKEY='muscle-map-log', RESTKEY='muscle-map-rest';
 let LOG={}; try{LOG=JSON.parse(localStorage.getItem(LOGKEY)||'{}')||{};}catch(e){LOG={};}
-const saveLog=()=>{try{localStorage.setItem(LOGKEY,JSON.stringify(LOG));}catch(e){}};
+const saveLog=()=>{try{localStorage.setItem(LOGKEY,JSON.stringify(LOG));}catch(e){} scheduleRec();};
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const fmtD=k=>{const p=k.split('-');return `${+p[1]}/${+p[2]}`;};
 const num=v=>{const n=parseFloat(String(v).replace(',','.'));return isFinite(n)?n:0;};
@@ -1736,6 +1962,25 @@ document.addEventListener('click',ev=>{
   if(b.id==='rtfloat'){if(RT.ex){MT='train';VT=false;openModal({mode:'exercise',ex:RT.ex});}return;}
   if(b.dataset.mtab){MT=b.dataset.mtab;render();syncDlg();return;}
   if(b.dataset.done){const e=EXM[S.ex],st=todaySets(e)[+b.dataset.done]; if(st){st.d=!st.d; saveLog(); renderTrain(); if(st.d&&RT.auto) rtStart(RT.dur);} return;}
+  if(b.dataset.gwstart){const k=b.dataset.gwstart;
+    const root={plan:'#planout',week:'#weekout',prog:'#progout'}[k];
+    const title=k==='plan'?'今天的課表':k==='week'?SPLITS[WS.split].days[WS.day].n:`${PROG[SP.prog].zh}・${SP.day} 日`;
+    startGuided($(root),title); return;}
+  if(b.dataset.gw){const a=b.dataset.gw;
+    if(a==='close'){closeGW();return;}
+    if(a==='end') GW.confirm=true; else if(a==='resume') GW.confirm=false;
+    else if(a==='finish'){GW.confirm=false;GW.end=true;} else if(a==='back') GW.end=false;
+    else if(a==='prev'){GW.i=Math.max(0,GW.i-1);GW.frame=0;} else if(a==='next'){GW.i=Math.min(GW.list.length-1,GW.i+1);GW.frame=0;}
+    renderGW(); if(a==='prev'||a==='next'||a==='finish') $('#gwbody').scrollTop=0; return;}
+  if(b.dataset.gwgo){GW.i=+b.dataset.gwgo;GW.end=false;GW.confirm=false;GW.frame=0;renderGW();return;}
+  if(b.dataset.gwframe){GW.frame=+b.dataset.gwframe;renderGW();return;}
+  if(b.dataset.gwdone){const sets=gwSets(GW.i),st=sets[+b.dataset.gwdone];
+    if(st){st.d=!st.d; saveLog();
+      if(st.d){const more=sets.some(x=>!x.d)||GW.i<GW.list.length-1; if(more){RT.ex=GW.list[GW.i].id; rtStart(RT.dur);}}
+      renderGW();}
+    return;}
+  if(b.dataset.addset==='gw'){const st=gwSets(GW.i),l=st[st.length-1]||{}; st.push({w:l.w||'',r:l.r||'',d:false}); saveLog(); renderGW(); return;}
+  if(b.dataset.recplan){PS.areas=new Set(b.dataset.recplan.split(','));renderPlan();document.getElementById('plan').scrollIntoView({behavior:smooth(),block:'start'});return;}
   if(b.dataset.addset){const e=EXM[S.ex],st=todaySets(e),l=st[st.length-1]||{}; st.push({w:l.w||'',r:l.r||'',d:false}); saveLog(); renderTrain(); return;}
   if(b.dataset.delset){const st=todaySets(EXM[S.ex]); if(st.length>1){st.pop(); saveLog(); renderTrain();} return;}
   if(b.dataset.rtp){RT.dur=+b.dataset.rtp; saveRT(); if(RT.run) rtStart(RT.dur); else {RT.left=RT.dur; RT.doneAt=0;} rtPaint(); return;}
@@ -1844,6 +2089,10 @@ document.addEventListener('pointermove',ev=>{
 });
 
 render();
+renderRecovery();
+$('#gw').addEventListener('cancel',ev=>{ev.preventDefault(); if(GW.end){closeGW();} else {GW.confirm=true; renderGW();}});
+$('#gw').addEventListener('close',()=>{clearInterval(GW.tick); try{GW.wl&&GW.wl.release();}catch(e){} GW.wl=null; rtPaint(); scheduleRec();});
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&$('#gw').open&&!GW.wl){try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(l=>{GW.wl=l;}).catch(()=>{});}catch(e){}} });
 renderPlan();
 renderWeek();
 renderProg();
