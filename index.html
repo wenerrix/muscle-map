@@ -416,6 +416,10 @@ a.tbtn{text-decoration:none;display:inline-flex;align-items:center}
 .mbar .mt2 i{position:absolute;left:0;top:0;bottom:0;border-radius:5px}
 .mbar .mv{text-align:right;font-family:var(--f-mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .shop .chip{cursor:default;font-size:.8rem}
+/* body figures and magnifier are pictures: no text selection highlight or text cursor while clicking or dragging */
+.loupe,.loupe *,.figs svg,.figs svg *,.pfigs svg,.pfigs svg *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.loupe text,.figs svg text,.pfigs svg text{cursor:inherit;pointer-events:none}
+.loupe{caret-color:transparent}
 /* ===== layout pass ===== */
 @media (max-width:700px){.shead::after{display:none}}
 @media (max-width:640px){
@@ -1814,6 +1818,7 @@ document.addEventListener('input',ev=>{
 let DRAG=null, SUPPRESS=false;
 document.addEventListener('pointerdown',ev=>{
   const svg=ev.target.closest&&ev.target.closest('#loupe-svg'); if(!svg||!LP) return;
+  if(ev.pointerType==='mouse') ev.preventDefault();   // stop the browser from starting a text selection while dragging
   DRAG={x:ev.clientX,y:ev.clientY,cx:LP.cx,cy:LP.cy,moved:false,scale:(200/(ZOOM??LP.auto))/svg.clientWidth,id:ev.pointerId};
 });
 document.addEventListener('pointermove',ev=>{
