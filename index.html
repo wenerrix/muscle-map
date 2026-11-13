@@ -3,12 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="全身肌群地圖：認識肌肉、排課表、一週菜單、寬肩與手臂計畫、飲食教練，以及 63 個附示範圖與 YouTube 影片的動作。">
+<meta name="description" content="全身肌群地圖：認識肌肉、看恢復狀態、排課表、全螢幕訓練模式、一週菜單、寬肩與手臂計畫、飲食教練，以及 67 個附示範圖與 YouTube 影片的動作。">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#E9EDF0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1317" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="肌群地圖">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
 <style>
 :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 img{max-width:100%}
 [hidden]{display:none!important}
+/* install banner + small status toast (self-hosted copy only) */
+.install{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface)}
+.install>div{flex:1;min-width:220px;display:grid;gap:2px}
+.install b{font-size:.95rem}
+.install span{font-size:.8rem;color:var(--muted)}
+.install .ibtn{border:0;background:var(--primary);color:#fff;font:inherit;font-weight:700;font-size:.9rem;padding:9px 16px;border-radius:10px;cursor:pointer}
+.install .ix{border:0;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;padding:4px 8px}
+.mmtoast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--ink);color:var(--surface);font-size:.85rem;padding:10px 14px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;gap:10px;align-items:center;max-width:calc(100vw - 32px)}
+.mmtoast button{border:0;background:var(--primary);color:#fff;font:inherit;font-weight:700;padding:5px 10px;border-radius:8px;cursor:pointer}
 </style>
 <title>全身肌群地圖</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -2101,5 +2119,38 @@ renderLib();
 $('#stat-ex').textContent=EX.length;
 </script>
 
+<script>
+(function(){
+  var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  function toast(html,ms){var t=document.createElement('div');t.className='mmtoast';t.setAttribute('role','status');t.innerHTML=html;document.body.appendChild(t);
+    if(ms) setTimeout(function(){t.remove();},ms); return t;}
+  if('serviceWorker' in navigator){
+    var hadController=!!navigator.serviceWorker.controller;
+    window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});
+    navigator.serviceWorker.addEventListener('controllerchange',function(){
+      if(!hadController){hadController=true;return;}
+      var t=toast('網站有新版本<button type="button">重新整理</button>');
+      t.querySelector('button').onclick=function(){location.reload();};
+    });
+  }
+  window.addEventListener('offline',function(){toast('目前離線：課表、紀錄和計時器照常能用，YouTube 影片需要網路',5000);});
+  if(standalone) return;
+  var hidden=false; try{hidden=localStorage.getItem('muscle-map-install-hide')==='1';}catch(e){}
+  if(hidden) return;
+  var hero=document.querySelector('.hero'); if(!hero) return;
+  var box=document.createElement('div'); box.className='install'; box.hidden=true; hero.after(box);
+  var deferred=null;
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  function show(html){box.innerHTML=html+'<button type="button" class="ix" aria-label="不再顯示">✕</button>';box.hidden=false;}
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;
+    show('<div><b>把肌群地圖安裝成 App</b><span>從主畫面全螢幕開啟，健身房沒網路也能用。</span></div><button type="button" class="ibtn">安裝 App</button>');});
+  if(ios) show('<div><b>加到 iPhone 主畫面</b><span>用 Safari 開啟這個網站，點下方的「分享」按鈕，再選「加入主畫面」。</span></div>');
+  box.addEventListener('click',function(ev){
+    if(ev.target.closest('.ibtn')&&deferred){deferred.prompt();deferred.userChoice.then(function(){deferred=null;box.hidden=true;});}
+    if(ev.target.closest('.ix')){box.hidden=true;try{localStorage.setItem('muscle-map-install-hide','1');}catch(e){}}
+  });
+  window.addEventListener('appinstalled',function(){box.hidden=true;toast('已安裝，可以從主畫面開啟',4000);});
+})();
+</script>
 </body>
 </html>
