@@ -519,6 +519,7 @@ input,textarea,select,[contenteditable="true"]{caret-color:auto}
 @media (max-width:820px){.gwstage{max-height:34vh;aspect-ratio:auto}.gwstage img{max-height:34vh}}
 .gwbig{width:100%;border:0;background:var(--primary);color:#fff;font:inherit;font-size:1.15rem;font-weight:700;padding:16px;border-radius:14px;cursor:pointer}
 .gwbig.good{background:var(--good)}
+.gwbig.danger{background:transparent;border:2px solid var(--primary);color:var(--primary)}
 .gwbig:active{transform:translateY(1px)}
 .srow.next .sn{color:var(--primary);font-weight:700}
 .gwnav{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;order:9}
@@ -538,6 +539,9 @@ input,textarea,select,[contenteditable="true"]{caret-color:auto}
 .gwdone .gwbig{width:auto;padding:12px 28px}
 
 /* ===== logging, clock, custom workouts ===== */
+#recout,#logout,#customout{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.gwbtns .tbtn.warn{border-color:var(--primary);color:var(--primary)}
+.savebar .tbtns{gap:8px}
 .mmtoast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--ink);color:var(--surface);font-size:.85rem;padding:10px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:calc(100vw - 32px)}
 .mmtoast button{border:0;background:var(--primary);color:#fff;font:inherit;font-weight:700;padding:5px 10px;border-radius:8px;cursor:pointer;margin-left:8px}
 .shd,.srow{grid-template-columns:40px minmax(0,1fr) minmax(0,1fr) 48px}
@@ -557,7 +561,8 @@ b.ok{color:var(--good)} b.auto{color:var(--rec-warm)}
 .gwtime.now b{color:var(--primary)}
 .gwbtns{display:flex;gap:6px}
 .gwsave{max-width:1200px;width:100%;margin:4px auto 0;text-align:right}
-@media (max-width:560px){.gwtime{padding:3px 8px;min-width:0}.gwtime b{font-size:1.15rem}.gwt b{font-size:.92rem}.gwbar{gap:8px}.gwsave{text-align:left}}
+@media (max-width:560px){.gwtime{padding:3px 8px;min-width:0}.gwtime b{font-size:1.15rem}.gwt b{font-size:.92rem}.gwbar{gap:8px;flex-wrap:wrap}.gwt{flex:1 1 100%;grid-template-columns:auto 1fr;align-items:baseline;gap:8px}.gwtimes{flex:1}.gwbtns{flex:0 0 auto}.gwsave{text-align:left}}
+@media (max-width:380px){.gwbtns{flex:1 1 100%}.gwbtns .tbtn{flex:1}}
 /* training log */
 .lgtop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
 .lgstats{display:grid;grid-template-columns:repeat(4,minmax(0,auto));gap:8px}
@@ -1845,7 +1850,7 @@ function startGuided(root,title,source){
 function startGuidedList(list,title,source){
   if(!list.length) return;
   const start=Date.now();
-  Object.assign(GW,{list,i:0,title,source,sid:'gw-'+start,start,frame:0,end:false,confirm:false});
+  Object.assign(GW,{list,i:0,title,source,sid:'gw-'+start,start,frame:0,end:false,confirm:false,cancelAsk:false});
   // an exercise already finished earlier today (another session) gets fresh rows for this workout
   list.forEach((it,k)=>{const st=gwSets(k), mine=st.filter(x=>!(x.d&&x.sid!==GW.sid)).length, l=st[st.length-1]||{};
     for(let j=mine;j<it.sets;j++) st.push({w:l.w||'',r:l.r||'',d:false});});
@@ -1872,7 +1877,7 @@ function renderGW(){
   const head=`<div class="gwbar"><div class="gwt"><span class="eyebrow">訓練中</span><b>${esc(GW.title)}</b></div>
     <div class="gwtimes"><div class="gwtime now"><span>現在</span><b class="nowclock">${nowHM()}</b></div>
       <div class="gwtime"><span>已練</span><b id="gw-clock">${mmss(Math.floor((Date.now()-GW.start)/1000))}</b></div></div>
-    <div class="gwbtns"><button type="button" class="tbtn" data-gw="save" title="把目前完成的組數輸入日誌">輸入</button><button type="button" class="tbtn" data-gw="end">結束</button></div></div>
+    <div class="gwbtns"><button type="button" class="tbtn" data-gw="save" title="把目前完成的組數輸入日誌">輸入</button><button type="button" class="tbtn warn" data-gw="cancel">取消訓練</button><button type="button" class="tbtn" data-gw="end">結束</button></div></div>
     <div class="gwsave"><span class="tnote" id="gw-status">${gwStatusHTML()}</span></div>
     <div class="gwprog">${prog}</div>`;
   if(GW.end){
@@ -1889,7 +1894,9 @@ function renderGW(){
      <div class="tbtns"><button type="button" class="tbtn" data-gwframe="0" aria-pressed="${GW.frame===0}">姿勢 1</button><button type="button" class="tbtn" data-gwframe="1" aria-pressed="${GW.frame===1}">姿勢 2</button><a class="tbtn" href="${ytUrl(e)}" target="_blank" rel="noopener">YouTube ↗</a></div>`:'';
   const last=GW.i===total-1;
   const P=[60,90,120,180];
-  box.innerHTML=head+`${GW.confirm?`<div class="gwconfirm" role="alertdialog" aria-label="結束訓練"><p><b>要結束這次訓練嗎？</b>已完成的組數都已經存好了，結束後會輸入到訓練日誌。</p><div class="tbtns"><button type="button" class="tbtn" data-gw="resume">繼續訓練</button><button type="button" class="gwbig" data-gw="finish">結束並看總結</button></div></div>`:''}
+  const doneN=sessSetCount(GW.sid);
+  box.innerHTML=head+`${GW.confirm?`<div class="gwconfirm" role="alertdialog" aria-label="結束訓練"><p><b>要結束這次訓練嗎？</b>${doneN?`已完成的 ${doneN} 組都存好了，結束後會輸入到訓練日誌。`:'這次還沒有完成任何一組，結束後不會留下紀錄。'}</p><div class="tbtns"><button type="button" class="tbtn" data-gw="resume">繼續訓練</button><button type="button" class="gwbig" data-gw="finish">${doneN?'結束並看總結':'結束'}</button></div></div>`:''}
+  ${GW.cancelAsk?`<div class="gwconfirm" role="alertdialog" aria-label="取消訓練"><p><b>要取消這次訓練嗎？</b>這次已完成的 ${doneN} 組會被刪除，不會出現在訓練日誌，也不會影響恢復狀態。這個動作不能復原。</p><div class="tbtns"><button type="button" class="tbtn" data-gw="cancelno">不要，繼續訓練</button><button type="button" class="gwbig danger" data-gw="cancelyes">確定取消並刪除</button></div></div>`:''}
   <div class="gwmain">
     <section class="gwleft">
       <div class="gwhead2"><div class="gwcount">動作 ${GW.i+1} / ${total}</div>
@@ -1955,15 +1962,19 @@ function renderLog(){
   const wk=days.filter(([k])=>dayDiff(k)<7);
   const wkSets=wk.reduce((t,[,items])=>t+items.reduce((u,i)=>u+i.sets.length,0),0);
   let lastT=0; days.forEach(([,items])=>items.forEach(i=>i.sets.forEach(s=>{if((s.t||0)>lastT) lastT=s.t;})));
-  const sess=SESS.filter(s=>s.items&&s.items.length).sort((a,b)=>(b.updated||0)-(a.updated||0));
+  const lastDay=days.length?days[0][0]:null;
+  const legacy=days.map(([k,items])=>{const its=items.map(i=>({id:i.id,sets:i.sets.filter(x=>!x.sid)})).filter(i=>i.sets.length);
+      return its.length?{id:'legacy-'+k,date:k,title:'之前的紀錄',source:'legacy',status:'saved',start:0,updated:0,end:0,items:its}:null;}).filter(Boolean);
+  const sess=SESS.filter(s=>s.items&&s.items.length).concat(legacy).sort((a,b)=>b.date.localeCompare(a.date)||(b.updated||0)-(a.updated||0));
   const stChip=s=>s.status==='saved'?'<span class="chipst ok">已輸入</span>':s.status==='auto'?'<span class="chipst auto">自動存檔</span>':'<span class="chipst live">進行中</span>';
   const vol=items=>items.reduce((t,i)=>t+(metric(EXM[i.id]).kind==='load'?i.sets.reduce((u,s)=>u+num(s.w)*num(s.r),0):0),0);
   const sessHTML=sess.length?sess.slice(0,40).map(s=>{
     const n=s.items.reduce((t,i)=>t+i.sets.length,0), v=vol(s.items);
     const end=s.end||s.updated, mins=Math.max(1,Math.round((end-s.start)/60000));
+    const when=s.source==='legacy'?'時間未記錄（更新前的紀錄）':`${SRC_TXT[s.source]||''} · ${hm(s.start)}–${hm(end)}（${mins} 分）`;
     return `<details class="lgsess"><summary>
       <span class="lgdate"><b>${fmtD(s.date)}</b><small>${wdTxt(s.date)} · ${agoTxt(s.date)}</small></span>
-      <span class="lgmain"><b>${esc(s.title||'訓練')}</b><small>${SRC_TXT[s.source]||''} · ${hm(s.start)}–${hm(end)}（${mins} 分）</small></span>
+      <span class="lgmain"><b>${esc(s.title||'訓練')}</b><small>${when}</small></span>
       <span class="lgnums"><span>${s.items.length} 個動作</span><span>${n} 組</span>${v?`<span>${Math.round(v).toLocaleString()} kg</span>`:''}</span>
       ${stChip(s)}</summary>
       <ul class="lglist">${s.items.map(i=>{const e=EXM[i.id];return e?`<li><span class="lgex"><b>${e.zh}</b><small>${e.en}</small></span><span class="lgsets">${i.sets.map(x=>`<span>${fmtSet(e,x)}${x.t?`<em>${hm(x.t)}</em>`:''}</span>`).join('')}</span></li>`:'';}).join('')}</ul>
@@ -1975,7 +1986,7 @@ function renderLog(){
         <button type="button" class="lgdel${armed?' armed':''}" data-lgdel="${key}" aria-label="刪除 ${fmtD(k)} ${e.zh} 的紀錄">${armed?'確定刪除？':'刪除'}</button></li>`;}).join('')}</ul></div>`).join('')
     :'<p class="pempty">還沒有任何完成的組數。</p>';
   box.innerHTML=`<div class="lgtop">
-      <div class="lgstats"><div><b>${wk.length}</b><span>最近 7 天訓練天數</span></div><div><b>${wkSets}</b><span>最近 7 天完成組數</span></div><div><b>${!lastT?'—':new Date(lastT).toDateString()===new Date().toDateString()?hm(lastT):`${new Date(lastT).getMonth()+1}/${new Date(lastT).getDate()} ${hm(lastT)}`}</b><span>最後一組的時間</span></div><div><b>${sess.filter(s=>s.status!=='saved').length}</b><span>未按輸入的場次</span></div></div>
+      <div class="lgstats"><div><b>${wk.length}</b><span>最近 7 天訓練天數</span></div><div><b>${wkSets}</b><span>最近 7 天完成組數</span></div><div><b>${lastT?(new Date(lastT).toDateString()===new Date().toDateString()?hm(lastT):`${new Date(lastT).getMonth()+1}/${new Date(lastT).getDate()} ${hm(lastT)}`):lastDay?fmtD(lastDay):'—'}</b><span>${lastT||!lastDay?'最後一組的時間':'最後訓練的日期'}</span></div><div><b>${sess.filter(s=>s.status!=='saved').length}</b><span>未按輸入的場次</span></div></div>
       <div class="lgref"><button type="button" class="tbtn strong" data-logrefresh="1">↻ 重新整理資料</button><span class="tnote">資料讀取於 ${hm(LG.refreshed)}</span></div>
     </div>
     <div class="seg lgtabs" role="group" aria-label="切換檢視"><button type="button" data-lgtab="sess" aria-pressed="${LG.tab==='sess'}">訓練場次</button><button type="button" data-lgtab="day" aria-pressed="${LG.tab==='day'}">每日明細</button></div>
@@ -2156,12 +2167,13 @@ function setDone(st,on,sid,meta){ // the single place where a set becomes done /
   const prev=st.sid;
   if(on){st.d=true; st.t=Date.now(); st.sid=sid; const s=sessEnsure(sid,meta); if(s.status!=='active'){s.status='active'; s.end=null;} sessSnap(s);}
   else {st.d=false; delete st.t; delete st.sid; const s=prev&&sessGet(prev); if(s) sessSnap(s);}
+  SESS=SESS.filter(x=>x.items&&x.items.length);   // a workout with no finished sets is not a workout
   saveLog(); saveSess();
 }
 function sessSave(id){ // the manual 輸入 button
   const s=sessGet(id); if(!s) return null;
   sessSnap(s);
-  if(!s.items.length) return s;
+  if(!s.items.length){ SESS=SESS.filter(x=>x!==s); saveSess(); return s; }
   s.status='saved'; s.end=Date.now(); saveSess(); return s;
 }
 // on load: anything still 'active' was left open (closed app / lost connection) and was auto-saved
@@ -2169,6 +2181,15 @@ SESS.forEach(s=>{ if(s.status==='active'){ s.status='auto'; s.end=s.end||s.updat
 SESS=SESS.filter(s=>s.items&&s.items.length);
 try{localStorage.setItem(SESSKEY,JSON.stringify(SESS));}catch(e){}
 const soloId=()=>'solo-'+today();
+function sessDiscard(sid,exId){ // undo all finished sets of a session (optionally only one exercise)
+  let n=0;
+  for(const [ex,days] of Object.entries(LOG)){ if(exId&&ex!==exId) continue;
+    for(const arr of Object.values(days||{})) (arr||[]).forEach(x=>{ if(x.d&&x.sid===sid){x.d=false; delete x.t; delete x.sid; n++;} }); }
+  const s=sessGet(sid); if(s) sessSnap(s);
+  SESS=SESS.filter(x=>x.items&&x.items.length);
+  saveLog(); saveSess(); return n;
+}
+const sessSetCount=sid=>{const s=sessGet(sid);return s?s.items.reduce((t,i)=>t+i.sets.length,0):0;};
 function toastMsg(t,ms){const el=document.createElement('div');el.className='mmtoast';el.setAttribute('role','status');el.textContent=t;(DLG&&DLG.open?DLG:$('#gw')&&$('#gw').open?$('#gw'):document.body).appendChild(el);setTimeout(()=>el.remove(),ms||2600);}
 
 function setRowsHTML(e,sets,prefix,nextIdx){
@@ -2222,7 +2243,8 @@ function renderTrain(){
         ${setRowsHTML(e,sets,'set',-1)}
         <div class="tbtns"><button type="button" class="tbtn" data-addset="1">+ 新增一組</button><button type="button" class="tbtn" data-delset="1" ${sets.length<=1?'disabled':''}>刪除最後一組</button></div>
         <div class="tsum" id="tsum">${trainSummary(e)}</div>
-        <div class="savebar"><p class="tnote" id="solo-status">${soloStatusHTML()}</p><button type="button" class="savebtn" data-solosave="1">輸入這次訓練</button></div>
+        <div class="savebar"><p class="tnote" id="solo-status">${soloStatusHTML()}</p>
+          <div class="tbtns">${(()=>{const n=todaySets(e).filter(x=>x.d&&x.sid===soloId()).length;return n?`<button type="button" class="tbtn${SOLO_ARM===e.id?' danger':''}" data-solocancel="1">${SOLO_ARM===e.id?`確定刪除這 ${n} 組？`:'取消本次'}</button>`:'';})()}<button type="button" class="savebtn" data-solosave="1">輸入這次訓練</button></div></div>
       </div>
       <div class="tcard thist"><h3>歷史紀錄</h3>${historyHTML(e)}</div>
     </div>
@@ -2280,7 +2302,7 @@ function rtPaint(){
   if(pill){pill.hidden=!(show&&DLG.open&&!(S.mode==='exercise'&&MT==='train'&&S.ex===RT.ex)); pill.textContent='⏱ '+txt; pill.classList.toggle('flash',!!flash);}
   if(fl){fl.hidden=!(show&&!DLG.open&&!$('#gw').open); fl.textContent='⏱ '+txt; fl.classList.toggle('flash',!!flash);}
 }
-let SNAP_T=null;
+let SNAP_T=null, SOLO_ARM=null;
 document.addEventListener('input',ev=>{
   const el=ev.target; if(!el.classList||!el.classList.contains('sin')||el.classList.contains('gin')||S.mode!=='exercise') return;
   const e=EXM[S.ex], s=todaySets(e)[+el.dataset.set]; if(!s) return;
@@ -2357,7 +2379,11 @@ document.addEventListener('click',ev=>{
   if(b.id==='rtfloat'){if(RT.ex){MT='train';VT=false;openModal({mode:'exercise',ex:RT.ex});}return;}
   if(b.dataset.mtab){MT=b.dataset.mtab;render();syncDlg();return;}
   if(b.dataset.done){const e=EXM[S.ex],st=todaySets(e)[+b.dataset.done];
+    if(st&&st.d&&st.t&&Date.now()-st.t<800) return;   // ignore an accidental double tap
+    SOLO_ARM=null;
     if(st){setDone(st,!st.d,soloId(),{title:'單項訓練',source:'solo'}); renderTrain(); if(st.d&&RT.auto){RT.ex=S.ex; rtStart(RT.dur);}} return;}
+  if(b.dataset.solocancel){ if(SOLO_ARM!==S.ex){SOLO_ARM=S.ex; renderTrain(); return;}
+    const n=sessDiscard(soloId(),S.ex); SOLO_ARM=null; toastMsg(`已刪除 ${n} 組，這次不記錄`); renderTrain(); return;}
   if(b.dataset.solosave){const ss=sessSave(soloId()); toastMsg(ss&&ss.items.length?`已輸入：${ss.items.length} 個動作、${ss.items.reduce((t,i)=>t+i.sets.length,0)} 組`:'今天還沒有完成的組數，按 ✓ 之後再輸入'); renderTrain(); renderLog(); return;}
   if(b.dataset.gwstart){const k=b.dataset.gwstart;
     const root={plan:'#planout',week:'#weekout',prog:'#progout'}[k];
@@ -2366,13 +2392,18 @@ document.addEventListener('click',ev=>{
   if(b.dataset.gw){const a=b.dataset.gw;
     if(a==='close'){sessSave(GW.sid); closeGW(); return;}
     if(a==='save'){const ss=sessSave(GW.sid); toastMsg(ss&&ss.items.length?`已輸入 ${ss.items.reduce((t,i)=>t+i.sets.length,0)} 組，可以繼續練`:'還沒有完成的組數'); renderGW(); return;}
-    if(a==='end') GW.confirm=true; else if(a==='resume') GW.confirm=false;
-    else if(a==='finish'){GW.confirm=false;GW.end=true;sessSave(GW.sid);} else if(a==='back') GW.end=false;
+    if(a==='cancel'){ if(!sessSetCount(GW.sid)){ closeGW(); toastMsg('已取消，這次沒有留下紀錄'); return; } GW.cancelAsk=true; GW.confirm=false; }
+    else if(a==='cancelno') GW.cancelAsk=false;
+    else if(a==='cancelyes'){ const n=sessDiscard(GW.sid); GW.cancelAsk=false; closeGW(); toastMsg(`已取消這次訓練，刪除了 ${n} 組`); renderRecovery(); renderLog(); return; }
+    else if(a==='end'){ GW.confirm=true; GW.cancelAsk=false; } else if(a==='resume') GW.confirm=false;
+    else if(a==='finish'){ GW.confirm=false; if(!sessSetCount(GW.sid)){ closeGW(); toastMsg('這次沒有完成任何一組，所以沒有記錄'); return; } GW.end=true; sessSave(GW.sid); }
+    else if(a==='back') GW.end=false;
     else if(a==='prev'){GW.i=Math.max(0,GW.i-1);GW.frame=0;} else if(a==='next'){GW.i=Math.min(GW.list.length-1,GW.i+1);GW.frame=0;}
     renderGW(); if(a==='prev'||a==='next'||a==='finish') $('#gwbody').scrollTop=0; return;}
   if(b.dataset.gwgo){GW.i=+b.dataset.gwgo;GW.end=false;GW.confirm=false;GW.frame=0;renderGW();return;}
   if(b.dataset.gwframe){GW.frame=+b.dataset.gwframe;renderGW();return;}
   if(b.dataset.gwdone){const sets=gwSets(GW.i),st=sets[+b.dataset.gwdone];
+    if(st&&st.d&&st.t&&Date.now()-st.t<800) return;   // ignore an accidental double tap
     if(st){setDone(st,!st.d,GW.sid,gwMeta());
       if(st.d){const more=sets.some(x=>!x.d)||GW.i<GW.list.length-1; if(more){RT.ex=GW.list[GW.i].id; rtStart(RT.dur);}}
       renderGW();}
@@ -2493,7 +2524,9 @@ render();
 renderRecovery();
 renderLog();
 renderCustom();
-$('#gw').addEventListener('cancel',ev=>{ev.preventDefault(); if(GW.end){closeGW();} else {GW.confirm=true; renderGW();}});
+$('#gw').addEventListener('cancel',ev=>{ev.preventDefault(); if(GW.end){closeGW();} else {GW.confirm=true; GW.cancelAsk=false; renderGW();}});
+// safety net: warn before closing the tab in the middle of a workout (the sets are already saved either way)
+window.addEventListener('beforeunload',ev=>{ if($('#gw').open&&!GW.end&&sessSetCount(GW.sid)){ ev.preventDefault(); ev.returnValue=''; } });
 $('#gw').addEventListener('close',()=>{clearInterval(GW.tick); try{GW.wl&&GW.wl.release();}catch(e){} GW.wl=null; rtPaint(); scheduleRec();});
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&$('#gw').open&&!GW.wl){try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(l=>{GW.wl=l;}).catch(()=>{});}catch(e){}} });
 renderPlan();
